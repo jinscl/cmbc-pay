@@ -1,13 +1,4 @@
 <template>
-  <div>
-    <header class="header">
-      <div class="header-icon" @click="goBack">
-        <i class="el-icon-arrow-left"></i>
-      </div>
-      <div class="header-title">
-        <span>通知单缴费</span>
-      </div>
-    </header>
     <div class="content">
       <div class="wrapper">
         <div class="item-row">
@@ -38,13 +29,22 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 <script>
 export default {
   name: "ConfirmPay",
   props: {
     msg: String
+  },
+  mounted() {
+    // 初始化页面，通过路由传入的参数，填充详情页面
+    let ntcDetails = this.$route.params.ntcDetails;
+    console.log(ntcDetails);
+    this.acceptAgencyName = ntcDetails.acceptAgencyName;
+    this.payer = ntcDetails.payer;
+    this.tatefeeAmt = ntcDetails.tatefeeAmt;
+    this.totalAmt = ntcDetails.totalAmt;
+    this.ntcStatus = ntcDetails.ntcStatus;
   },
   data: function() {
     return {
@@ -55,19 +55,7 @@ export default {
       ntcStatus: ""//通知书状态
     };
   },
-  created() {
-    // 初始化页面，通过路由传入的参数，填充详情页面
-    let ntcDetail = this.$route.params.ntcDetail;
-    this.acceptAgencyName = ntcDetail.acceptAgencyName;
-    this.payer = ntcDetail.payer;
-    this.tatefeeAmt = ntcDetail.tatefeeAmt;
-    this.totalAmt = ntcDetail.totalAmt;
-    this.ntcStatus = ntcDetail.ntcStatus;
-  },
   methods: {
-    goBack() {
-        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/');
-    },
     /**
      * 通用支付
      * 第一步：柜面支付：记录核心日志，并加密返回前台
@@ -78,36 +66,43 @@ export default {
      */
     async confirmPay(){
         let ntcId = this.$route.params.ntcId;
+        let areaCode = this.$route.params.areaCode;
         // ⚠️ 参数统一采用驼峰命名方式
         let bankPayRes = await this.$Http.commonPay({
-            payParam : {
-                acceptAgencyName: this.acceptAgencyName,
-                payer: this.payer,
-                tatefeeAmt: this.tatefeeAmt,
-                totalAmt: this.totalAmt,
-                ntcStatus: this.ntcStatus
-            },
-            ntcId:ntcId
+            ntcId:ntcId,
+            areaCode:areaCode,
+            data:this.$route.params.ntcDetails
         });
         // 柜面支付接口畅通
-        if(bankPayRes && !bankPayRes.errorMsg){
-            let bankPayResData = bankPayRes.data;
-            let bankPayResJson = JSON.stringify(bankPayResData);
-            // 调用招行一网通支付,参数：柜面支付返回结果转为json,无响应报文
-            await this.$Http.cmbcBasePay({charset:"UTF-8",jsonRequestData:bankPayResJson},true,{
-                baseURl:'http://121.15.180.66:801',
-            });
-            // 调用支付结果校验接口,参数：柜面支付返回结果
-            await this.$Http.checkPayResult(bankPayResData);
-            this.$alert("支付成功！", '温馨提示', {
-                confirmButtonText: '确定'
-            });
-        }else{
-            this.$alert(res.errorMsg, '温馨提示', {
-                confirmButtonText: '确定'
-            });
+        if(bankPayRes){
+          if(!bankPayRes.errorMsg){
+              let bankPayResData = bankPayRes.reqData;
+              let bankPayResJson = JSON.stringify(bankPayResData);
+              // 调用招行一网通支付,参数：柜面支付返回结果转为json,无响应报文
+              await this.$Http.cmbcBasePay({charset:"UTF-8",jsonRequestData:bankPayResJson},true,{
+                  baseURl:'http://121.15.180.66:801',
+              });
+              // 调用支付结果校验接口,参数：柜面支付返回结果
+              let autoCheckPayRes = await this.$Http.checkPayResult({
+                ntcId:ntcId,
+                areaCode:areaCode,
+                dateTime:bankPayResData.dateTime,
+                orderNo:bankPayResData.orderNo,
+                date:bankPayResData.date
+              });
+              if(autoCheckPayRes && !autoCheckPayRes.errorMsg){
+                // 支付成功，调用招行消息通知类
+              }else{
+                this.$alert(autoCheckPayRes.errorMsg, '温馨提示', {
+                  confirmButtonText: '确定'
+                });
+              }
+          }else{
+              this.$alert(bankPayRes.errorMsg, '温馨提示', {
+                  confirmButtonText: '确定'
+              });
+          }
         }
-
     }
   }
 };

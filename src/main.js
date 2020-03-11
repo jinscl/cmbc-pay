@@ -38,25 +38,4 @@ Vue.config.productionTip = false
 new Vue({
   render: h => h(App),
   router,
-  beforeCreate(){
-    console.log('beforeCreate $el',this.$el)
-    console.log('beforeCreate $data',this.$data)
-  },
-  created(){
-    console.log('created $el',this.$el)
-    console.log('created $data',this.$data)
-  },
-  beforeMount(){
-    console.log('beforeMount $data',this.$data)
-    console.log('beforeMount $el',this.$el)
-  },
-  mounted(){
-    console.log('mounted $data',this.$data)
-    console.log('mounted $el',this.$el)
-  },
-  data(){
-    return {
-      name:'jscl'
-    }
-  }
 }).$mount('#app')

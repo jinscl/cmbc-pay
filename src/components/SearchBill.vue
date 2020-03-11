@@ -1,15 +1,10 @@
 <template>
-  <div>
-    <header class="header">
-      <div class="header-icon"><i class="el-icon-arrow-left"></i></div>
-      <div class="header-title"> <span>通知单缴费</span></div>
-    </header>
     <div class="content">
       <div class="input-wrapper">
        <div class="item-row">
         <div class="item-name">通知单号</div>
         <div class="item-value">
-          <input class="item-input" v-model="ntcId" placeholder="请在此输入"/>
+          <input type="number" class="item-input ntc-id" v-model="ntcId" placeholder="请在此输入"/>
           <i class="el-icon-full-screen" @click="scanBarCode"></i>
           <!-- <img src="../assets/scanBar.png"> -->
         </div>
@@ -17,7 +12,7 @@
       <div class="item-row">
         <div class="item-name">区划代码</div>
         <div class="item-value">
-          <input class="item-input" v-model="areaCode" placeholder="请在此输入"/>
+          <input type="number" class="item-input" v-model="areaCode" placeholder="请在此输入"/>
         </div>
       </div>
       <div class="button-row">
@@ -27,7 +22,6 @@
       </div>
       </div>
     </div>
-  </div>
 </template>
 <script>
 import cmblapi from 'cmblapi'
@@ -37,7 +31,6 @@ export default {
     return {
         ntcId:"",
         areaCode:"",
-        isDisabled:true
     }
   },
   // watch: {
@@ -47,13 +40,10 @@ export default {
   //  },
   computed:{
     isDisabled:function(){
-      return (this.ntcId && this.areaCode)
+      return ((this.ntcId && this.areaCode) ? false : true)
     }
   },
   methods: {
-    goBack() {
-      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/');
-    },
     /**
      * 招商银行扫描二维码接口
      */
@@ -89,26 +79,29 @@ export default {
         });
       }else{
         let searchParams = { ntcId: ntcId, areaCode:this.areaCode};
-        let res = await this.$Http.getNtcInfo(searchParams);
-        // 获取通知书成功
-        if(!res.errMsg){
-          this.$router.push({name: 'pay', params: {ntcDetail: res.data, ntcId: ntcId}});
-        }else{
-          this.$alert(res.errMsg, '温馨提示', {
-            confirmButtonText: '确定',
-            center: true
-          })
+        let res = await this.$Http.getNtcInfo(searchParams,false,{
+          baseURl: "http://125.35.5.131:8804"
+        });
+        console.log("通知书详情查询结果"+res);
+        if(res){
+          // 获取通知书成功
+          if(!res.errMsg){
+            this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data}});
+          }else{
+            this.$alert(res.errMsg, '温馨提示', {
+              confirmButtonText: '确定',
+              center: true
+            })
+          }
         }
- 
-        
         // let testData = {
-        //     businessName: "手机银行饭票jscl",
-        //     tradeNo: "00001",
-        //     payAccount: "1",
-        //     needPayMoney: "¥95.00",
-        //     orderPhoneNo: "12345678900"
+        //     acceptAgencyName: "深圳财政局",
+        //     payer: "jscl",
+        //     tatefeeAmt: "200.00",
+        //     totalAmt: "1000.00",
+        //     ntcStatus: "未支付"
         // }
-        // this.$router.push({name: 'pay', params: {noticeDetail: testData, noticeNo: "12345678"}});
+        // this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails: testData}});
       }
     },
   }
@@ -122,12 +115,17 @@ export default {
       line-height: 40px;
       padding:0 1rem;
       background-color: #fff;
-      border-top:1px solid #eeeeee;
       border-bottom:1px solid #eeeeee;
     }
     .item-input{
       font-size: 16px;
       text-align: right;
+      outline:none; 
+      border:none;
+      background-color:transparent;
+    }
+    .ntc-id{
+      /* margin-right:0.5rem; */
     }
     .el-icon-share{
       margin-left: 8px;
