@@ -33,11 +33,6 @@ export default {
         areaCode:"",
     }
   },
-  // watch: {
-  //    ntcId:function(val){
-  //     this.isDisabled = (val !== '') ? false :true;
-  //    }
-  //  },
   computed:{
     isDisabled:function(){
       return ((this.ntcId && this.areaCode) ? false : true)

@@ -26,7 +26,9 @@ export default {
       }
     let loginInfo = this.validateLogin(logintest);
     console.log(loginInfo);
-    
+    this.$Http.getNtcInfo({
+"ntcId": 12, "areaCode":12
+});
     // 柜面不存在登录信息
     if (loginInfo.errMsg) {
       this.login();
@@ -56,6 +58,10 @@ export default {
         baseURl: "http://125.35.5.131:8804"
       });
       if (res) {
+        // let tst = this.$Http.getNtcInfo({areaCode:"12",ntcId:"12"},false,{
+        //   baseURl: "http://125.35.5.131:8804"
+        // });
+        // console.log("通知单"+tst);
         return res;
       } else {
         this.$alert("登录校验接口返回undefined！", "温馨提示", {
@@ -133,6 +139,7 @@ body {
 .header {
   height: 44px;
   line-height: 44px;
+  margin-top: 40px;
   display: -webkit-flex; /* Safari */
   display: flex;
   color: #383838;
