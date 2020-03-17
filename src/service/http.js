@@ -5,7 +5,7 @@ import commonApi from './commonApi';
 
 // commonApi循环遍历输出不同的请求方法
 let instance = axios.create({
-    baseURl:'http://localhost:8082',
+    baseURL:'http://125.35.5.131:8804',
     timeout:1000
 });
 // 包裹请求方法的容器
@@ -37,7 +37,7 @@ for(let key in commonApi){
             }catch(err){
                 response = err;
             }
-            
+
         }else if(api.method === 'delete' || api.method === 'get'){
             // 如果放在URL上就挂在params参数上，如果在request payload上，则挂在data上config.data = newParams
             config.params = newParams;

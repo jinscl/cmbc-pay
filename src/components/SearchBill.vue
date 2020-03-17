@@ -60,7 +60,7 @@ export default {
       this.areaCode = "87";
     },
     /**
-     * 从财政查询通知单详情 
+     * 从财政查询通知单详情
      * @param ntcId 通知单
      * @returns 通知单详情
      */
@@ -75,15 +75,15 @@ export default {
       }else{
         let searchParams = { ntcId: ntcId, areaCode:this.areaCode};
         let res = await this.$Http.getNtcInfo(searchParams,false,{
-          baseURl: "http://125.35.5.131:8804"
+          baseURL: "http://125.35.5.131:8804"
         });
         console.log("通知书详情查询结果"+res);
         if(res){
           // 获取通知书成功
-          if(!res.errMsg){
+          if(!res.errorMsg){
             this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data}});
           }else{
-            this.$alert(res.errMsg, '温馨提示', {
+            this.$alert(res.errorMsg, '温馨提示', {
               confirmButtonText: '确定',
               center: true
             })
@@ -105,7 +105,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .item-row{
-      display: flex; 
+      display: flex;
       height: 40px;
       line-height: 40px;
       padding:0 1rem;
@@ -115,7 +115,7 @@ export default {
     .item-input{
       font-size: 16px;
       text-align: right;
-      outline:none; 
+      outline:none;
       border:none;
       background-color:transparent;
     }
@@ -128,7 +128,7 @@ export default {
     .item-input:focus{
       outline:transparent;
     }
-    
-  
+
+
 </style>
 

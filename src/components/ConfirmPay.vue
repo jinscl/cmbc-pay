@@ -21,7 +21,7 @@
           <label class="item-name">应缴总金额</label>
           <span class="item-value">{{totalAmt}}</span>
         </div>
-       
+
         <div class="button-row">
           <el-row>
             <el-button type="primary" @click="confirmPay">确认支付</el-button>
@@ -80,7 +80,7 @@ export default {
               let bankPayResJson = JSON.stringify(bankPayResData);
               // 调用招行一网通支付,参数：柜面支付返回结果转为json,无响应报文
               await this.$Http.cmbcBasePay({charset:"UTF-8",jsonRequestData:bankPayResJson},true,{
-                  baseURl:'http://121.15.180.66:801',
+                  baseURL:'http://121.15.180.66:801',
               });
               // 调用支付结果校验接口,参数：柜面支付返回结果
               let autoCheckPayRes = await this.$Http.checkPayResult({
