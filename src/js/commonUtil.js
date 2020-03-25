@@ -30,8 +30,11 @@ function randomString(len) {
   }
   return str;
 }
-
+function shutDown(){
+  window.open('about:blank','_self').close()
+}
 export default {
   formateDateAndTimeToString,
-  randomString
+  randomString,
+  shutDown
 }

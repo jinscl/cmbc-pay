@@ -43,21 +43,22 @@ export default {
      * 招商银行扫描二维码接口
      */
     scanBarCode(){
+      let self = this;
       cmblapi.scanBarcode({
         success:function(res){
           console.log("扫描结果："+res.result);
           console.log("二维码/条形码来源："+res.source);
           this.ntcId = res.result.ntcId;
           this.areaCode = res.result.areaCode;
+          self.$alert("扫一扫查询获取通知单成功！");
         },
         fail:function(res){
           console.log("错误代码"+res.errCode);
           console.log("错误信息"+res.errMsg);
+          self.$alert("扫一扫查询获取通知单失败！");
         }
       })
-      alert("扫一扫查询获取通知单成功！");
-      this.ntcId = "12345678";
-      this.areaCode = "87";
+
     },
     /**
      * 从财政查询通知单详情
@@ -73,10 +74,14 @@ export default {
           center: true
         });
       }else{
-        let searchParams = { ntcId: ntcId, areaCode:this.areaCode};
-        let res = await this.$Http.getNtcInfo(searchParams,false,{
-          baseURL: "http://125.35.5.131:8804"
-        });
+        let searchParams = {
+            "ntcId": ntcId,
+            "areaCode":this.areaCode
+        };
+          console.log("searchParams"+searchParams.areaCode);
+        let res = await this.$Http.getNtcInfo(searchParams, false, {
+            baseURL: "http://125.35.5.131:8804"
+          });
         console.log("通知书详情查询结果"+res);
         if(res){
           // 获取通知书成功

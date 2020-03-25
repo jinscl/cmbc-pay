@@ -14,22 +14,19 @@
 
 <script>
 import cmblapi from "cmblapi";
+import commonUtil from './js/commonUtil'
 
 export default {
   name: "app",
   created() {
     // 校验登录信息
     let logintest = {
-      }
-    let loginInfo = this.validateLogin(logintest);
-    console.log(loginInfo);
+      "resultType":"Y",
+      "cryptType":"2",
+      "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
+     };
+    this.validateLogin(logintest);
     // 柜面不存在登录信息
-    if (loginInfo.errorMsg) {
-      this.login();
-    } else {
-      this.$router.push("/search");
-    }
-
     // // 跨域测试数据
     // this.$Http.test({financeCode:"110000",fieldDisptype:1},true,{
     //               // baseURl:'http://10.10.66.57:8801',
@@ -48,7 +45,7 @@ export default {
      * @param loginData 不存在：查询登录信息，存在：保存登录信息
      */
     async validateLogin(loginData) {
-      let res = await this.$Http.validateLogin(loginData, false, {
+      let res = await this.$Http.httpLogin(loginData, false, {
         baseURL: "http://125.35.5.131:8804"
       });
       if (res) {
@@ -56,11 +53,23 @@ export default {
         //   baseURl: "http://125.35.5.131:8804"
         // });
         // console.log("通知单"+tst);
-        return res;
+        if(res.errorMsg){
+          this.$alert(res.errorMsg, "温馨提示", {
+            confirmButtonText: "确定"
+          });
+          this.login();
+        }else{
+          this.$alert("登录授权成功！", "温馨提示", {
+            confirmButtonText: "确定"
+          });
+          await this.$router.push("/search");
+          return res;
+        }
       } else {
         this.$alert("登录校验接口返回undefined！", "温馨提示", {
           confirmButtonText: "确定"
         });
+
       }
     },
     // 登录接口
@@ -69,6 +78,9 @@ export default {
       let preLoginInfo = await this.$Http.requestPreLoginData();
       if (preLoginInfo) {
         // 柜面小程序登录信息不存在
+        this.$alert(preLoginInfo, "温馨提示", {
+          confirmButtonText: "确定"
+        });
         if (!preLoginInfo.errorMsg) {
           /**
            * 招商银行官方用户登录和认证接口（进行客户核身，并获取部分客户信息，根据商户号不同，返回不同的权限内容）
@@ -78,6 +90,7 @@ export default {
            * @returns cryptType string body加密类型：1表示明文，2表示DES加密，3表示非对称加密
            * @returns resultType string 登录授权结果：Y表示成功，N表示失败
            */
+          let self = this;
           cmblapi.merchantLogin({
             corpNo: preLoginInfo.corpNo,
             reAuth: preLoginInfo.reAuth,
@@ -88,24 +101,34 @@ export default {
             },
             success: function(res) {
               console.log("招行登录成功回调");
+              self.$alert("再次拉起登录", "温馨提示", {
+                confirmButtonText: "确定"
+              });
+              self.$alert(res, "温馨提示", {
+                confirmButtonText: "确定"
+              });
               // 手机银行登录成功后，返回加密并签名的用户信息
               if (res.resultType === "Y") {
-                this.$router.push("/search");
+                self.$router.push("/search");
                 //将小程序登录信息保存到柜面
-                this.$Http.requestPreLoginData(res);
+                self.validateLogin(res);
               } else {
                 this.$alert("登录授权失败，请稍后重试！", "温馨提示", {
                   confirmButtonText: "确定"
                 });
+                //commonUtil.shutDown();
               }
             },
-            fail: function(errCode, errMsg) {
+            fail: function(res) {
               console.log("招行登录失败回调");
-              this.$alert(errCode + ":" + errMsg, "温馨提示", {
+              self.$alert(res.errCode + ":" + res.errMsg, "温馨提示", {
                 confirmButtonText: "确定"
               });
+              commonUtil.shutDown();
             }
           });
+        } else {
+         commonUtil.shutDown();
         }
       }
     },
