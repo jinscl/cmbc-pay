@@ -27,11 +27,11 @@ const COMMON_API = {
     // 柜面：支付结果校验
     checkPayResult:{
         method:'post',
-        url:'/CmbHttpController/CMB/autoCheckPayResult'
+        url:'/CmbHttpController/CMB/checkPayResult'
     },
     test:{
         method:'post',
-        url:'/ebank/df/f_ebank/paramconf/paramConfGetGridData.do'
+        url:'/CmbHttpController/payReturn'
     }
 }
 export default COMMON_API;

@@ -20,11 +20,7 @@ export default {
   name: "app",
   created() {
     // 校验登录信息
-    let logintest = {
-      "resultType":"Y",
-      "cryptType":"2",
-      "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
-     };
+    let logintest = {};
     this.validateLogin(logintest);
     // 柜面不存在登录信息
     // // 跨域测试数据
@@ -46,11 +42,11 @@ export default {
      */
     async validateLogin(loginData) {
       let res = await this.$Http.httpLogin(loginData, false, {
-        baseURL: "http://125.35.5.131:8804"
+        baseURL: "http://wxnontax.vipgz1.idcfengye.com"
       });
       if (res) {
         // let tst = this.$Http.getNtcInfo({areaCode:"12",ntcId:"12"},false,{
-        //   baseURl: "http://125.35.5.131:8804"
+        //   baseURl: "http://wxnontax.vipgz1.idcfengye.com"
         // });
         // console.log("通知单"+tst);
         if(res.errorMsg){

@@ -23,22 +23,33 @@
         </div>
 <!--        <div class="button-row">-->
 <!--          <el-row>-->
-<!--            <el-button type="primary" @click="confirmPay">确认支付</el-button>-->
+<!--            <el-button type="primary" @click="queryResult">查询支付</el-button>-->
 <!--          </el-row>-->
 <!--        </div>-->
       </div>
       <div>
-        <form action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
+        <form id="payForm" name="payForm" action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
           <input type="hidden" name="jsonRequestData" v-bind:value="bankPayResJson"/>
           <input type="hidden" name="charset" value="utf-8"/>
-          <input onclick="return confirmPay()" type="submit" value="提交"/>
+<!--          <input type="submit" value="提交"/>-->
         </form>
+        <div class="button-row">
+          <el-row>
+            <el-button type="primary" @click="confirmPay">确认支付</el-button>
+          </el-row>
+        </div>
       </div>
+<!--      <div class="button-row">-->
+<!--        <el-row>-->
+<!--          <el-button type="primary" @click="returnResult">支付回调</el-button>-->
+<!--        </el-row>-->
+<!--      </div>-->
     </div>
 </template>
 <script>
 export default {
-  name: "ConfirmPay",
+  name1: "ConfirmPay",
+  name2: "QueryResult",
   props: {
     msg: String
   },
@@ -59,10 +70,12 @@ export default {
       tatefeeAmt: "",//滞纳金
       totalAmt: "",//应缴总金额
       ntcStatus: "",//通知书状态
-      bankPayResJson:""
+      bankPayResJson:"",
+      bankPayRes:""
     };
   },
   methods: {
+
     /**
      * 通用支付
      * 第一步：柜面支付：记录核心日志，并加密返回前台
@@ -71,58 +84,43 @@ export default {
      * @param 通知单号+通知单详情
      * @returns 错误信息errorMsg,成功信息successMsg
      */
-    async confirmPay(){
+    async confirmPay() {
 
-        let ntcId = this.$route.params.ntcId;
-        let areaCode = this.$route.params.areaCode;
-        // ⚠️ 参数统一采用驼峰命名方式
-        let bankPayRes = await this.$Http.commonPay({
-            ntcId:ntcId,
-            areaCode:areaCode,
-            data:this.$route.params.ntcDetails
-        },false,{
-          baseURL:'http://125.35.5.131:8804',
-        });
-        console.log(bankPayRes);
-        // 柜面支付接口畅通
-        if(bankPayRes){
-          if(!bankPayRes.errorMsg){
-              let bankPayResData = bankPayRes.reqData;
-              this.bankPayResJson = JSON.stringify(bankPayRes);
-              // 调用招行一网通支付,参数：柜面支付返回结果转为json,无响应报文
-              // await this.$Http.cmbcBasePay({jsonRequestData:bankPayResJson},true,{
-              //     baseURL:'http://121.15.180.66:801',
-              //   headers:{
-              //     'Content-Type': 'application/x-www-form-urlencoded'
-              //   }
-              // });
-              // 调用支付结果校验接口,参数：柜面支付返回结果
-
-              let autoCheckPayRes = await this.$Http.checkPayResult({
-                ntcId:ntcId,
-                areaCode:areaCode,
-                dateTime:bankPayResData.dateTime,
-                orderNo:bankPayResData.orderNo,
-                date:bankPayResData.date
-              });
-              if(autoCheckPayRes && !autoCheckPayRes.errorMsg){
-                // 支付成功，调用招行消息通知类
-              }else{
-                this.$alert(autoCheckPayRes.errorMsg, '温馨提示1111', {
-                  confirmButtonText: '确定'
-                });
-              }
-          }else{
-              this.$alert(bankPayRes.errorMsg, '温馨提示error', {
-                  confirmButtonText: '确定'
-              });
-          }
+      let ntcId = this.$route.params.ntcId;
+      let areaCode = this.$route.params.areaCode;
+      // ⚠️ 参数统一采用驼峰命名方式
+      let bankPayRes = await this.$Http.commonPay({
+        ntcId: ntcId,
+        areaCode: areaCode,
+        data: this.$route.params.ntcDetails
+      }, false, {
+        baseURL: 'http://wxnontax.vipgz1.idcfengye.com',
+      });
+      this.bankPayRes = bankPayRes;
+      console.log(bankPayRes);
+      // 柜面支付接口畅通
+      if (bankPayRes) {
+        if (!bankPayRes.errorMsg) {
+          //let bankPayResData = bankPayRes.reqData;
+          this.bankPayResJson = JSON.stringify(bankPayRes);
+          // 调用招行一网通支付,参数：柜面支付返回结果转为json,无响应报文
+          // await this.$Http.cmbcBasePay({jsonRequestData:bankPayResJson},true,{
+          //     baseURL:'http://121.15.180.66:801',
+          //   headers:{
+          //     'Content-Type': 'application/x-www-form-urlencoded'
+          //   }
+          // });
+          // 调用支付结果校验接口,参数：柜面支付返回结果
+          var payForm = document.getElementById("payForm");
+          setTimeout(() => {
+            payForm.submit();
+          }, 1000);
+        } else {
+          this.$alert(bankPayRes.errorMsg, '温馨提示error', {
+            confirmButtonText: '确定'
+          });
         }
-        console.log(this.bankPayResJson);
-        var t = setTimeout(function (){
-        console.log('执行了');
-      }, 100000);
-        console.log(t)
+      }
     }
   }
 };

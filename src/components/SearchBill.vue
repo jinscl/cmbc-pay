@@ -15,6 +15,18 @@
           <input type="number" class="item-input" v-model="areaCode" placeholder="请在此输入"/>
         </div>
       </div>
+      <div class="item-row">
+          <div class="item-name">订单号</div>
+          <div class="item-value">
+              <input type="number" class="item-input" v-model="orderNo" placeholder="请在此输入"/>
+          </div>
+      </div>
+          <div class="item-row">
+              <div class="item-name">订单日期</div>
+              <div class="item-value">
+                  <input type="number" class="item-input" v-model="date" placeholder="请在此输入"/>
+              </div>
+          </div>
       <div class="button-row">
           <el-row>
               <el-button type="primary" :disabled="isDisabled" @click="getNtcInfoFromCZ">查询</el-button>
@@ -31,11 +43,13 @@ export default {
     return {
         ntcId:"",
         areaCode:"",
+        orderNo:"",
+        date:""
     }
   },
   computed:{
     isDisabled:function(){
-      return ((this.ntcId && this.areaCode) ? false : true)
+      return ((this.ntcId && this.areaCode && this.orderNo) ? false : true)
     }
   },
   methods: {
@@ -80,13 +94,13 @@ export default {
         };
           console.log("searchParams"+searchParams.areaCode);
         let res = await this.$Http.getNtcInfo(searchParams, false, {
-            baseURL: "http://125.35.5.131:8804"
+            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
           });
         console.log("通知书详情查询结果"+res);
         if(res){
           // 获取通知书成功
           if(!res.errorMsg){
-            this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data}});
+            this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data, orderNo: this.orderNo,date:this.date}});
           }else{
             this.$alert(res.errorMsg, '温馨提示', {
               confirmButtonText: '确定',
