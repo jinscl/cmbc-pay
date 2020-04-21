@@ -15,18 +15,18 @@
           <input type="number" class="item-input" v-model="areaCode" placeholder="请在此输入"/>
         </div>
       </div>
-      <div class="item-row">
-          <div class="item-name">订单号</div>
-          <div class="item-value">
-              <input type="number" class="item-input" v-model="orderNo" placeholder="请在此输入"/>
-          </div>
-      </div>
-          <div class="item-row">
-              <div class="item-name">订单日期</div>
-              <div class="item-value">
-                  <input type="number" class="item-input" v-model="date" placeholder="请在此输入"/>
-              </div>
-          </div>
+<!--      <div class="item-row">-->
+<!--          <div class="item-name">订单号</div>-->
+<!--          <div class="item-value">-->
+<!--              <input type="number" class="item-input" v-model="orderNo" placeholder="请在此输入"/>-->
+<!--          </div>-->
+<!--      </div>-->
+<!--      <div class="item-row">-->
+<!--          <div class="item-name">订单日期</div>-->
+<!--          <div class="item-value">-->
+<!--              <input type="number" class="item-input" v-model="date" placeholder="请在此输入"/>-->
+<!--          </div>-->
+<!--      </div>-->
       <div class="button-row">
           <el-row>
               <el-button type="primary" :disabled="isDisabled" @click="getNtcInfoFromCZ">查询</el-button>
@@ -49,7 +49,7 @@ export default {
   },
   computed:{
     isDisabled:function(){
-      return ((this.ntcId && this.areaCode && this.orderNo) ? false : true)
+      return ((this.ntcId && this.areaCode) ? false : true)
     }
   },
   methods: {
@@ -83,7 +83,7 @@ export default {
       let ntcId = this.ntcId;
       if( ntcId === ''){
         // ⚠️通知单格式校验 格式需要再确认
-        this.$alert('通知单号为8位数字', '温馨提示', {
+        this.$alert('通知单号为位数字', '温馨提示', {
           confirmButtonText: '确定',
           center: true
         });
@@ -94,7 +94,7 @@ export default {
         };
           console.log("searchParams"+searchParams.areaCode);
         let res = await this.$Http.getNtcInfo(searchParams, false, {
-            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
+            baseURL: "http://125.35.5.131:8804"
           });
         console.log("通知书详情查询结果"+res);
         if(res){

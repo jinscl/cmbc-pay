@@ -94,7 +94,7 @@ export default {
         areaCode: areaCode,
         data: this.$route.params.ntcDetails
       }, false, {
-        baseURL: 'http://wxnontax.vipgz1.idcfengye.com',
+        baseURL: 'http://125.35.5.131:8804',
       });
       this.bankPayRes = bankPayRes;
       console.log(bankPayRes);

@@ -18,6 +18,11 @@ import commonUtil from './js/commonUtil'
 
 export default {
   name: "app",
+  data: function() {
+    return {
+      count : 0,
+    };
+  },
   created() {
     // 校验登录信息
     let logintest = {};
@@ -41,18 +46,22 @@ export default {
      * @param loginData 不存在：查询登录信息，存在：保存登录信息
      */
     async validateLogin(loginData) {
+      this.count++;
       let res = await this.$Http.httpLogin(loginData, false, {
-        baseURL: "http://wxnontax.vipgz1.idcfengye.com"
+        baseURL: "http://125.35.5.131:8804"
       });
       if (res) {
         // let tst = this.$Http.getNtcInfo({areaCode:"12",ntcId:"12"},false,{
-        //   baseURl: "http://wxnontax.vipgz1.idcfengye.com"
+        //   baseURl: "http://125.35.5.131:8804"
         // });
         // console.log("通知单"+tst);
         if(res.errorMsg){
           this.$alert(res.errorMsg, "温馨提示", {
             confirmButtonText: "确定"
           });
+          if(this.count > 2){
+            commonUtil.shutDown();
+          }
           this.login();
         }else{
           this.$alert("登录授权成功！", "温馨提示", {
@@ -65,7 +74,7 @@ export default {
         this.$alert("登录校验接口返回undefined！", "温馨提示", {
           confirmButtonText: "确定"
         });
-
+        commonUtil.shutDown();
       }
     },
     // 登录接口

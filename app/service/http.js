@@ -5,7 +5,7 @@ import commonApi from './commonApi';
 
 // commonApi循环遍历输出不同的请求方法
 let instance = axios.create({
-    baseURL:'http://wxnontax.vipgz1.idcfengye.com',
+    baseURL:'http://125.35.5.131:8804',
     timeout:5000
 });
 // 包裹请求方法的容器

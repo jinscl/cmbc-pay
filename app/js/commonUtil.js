@@ -31,7 +31,10 @@ function randomString(len) {
   return str;
 }
 function shutDown(){
-  window.open('about:blank','_self').close()
+  setTimeout(() => {
+    window.opener='';
+    window.close();
+  }, 1500);
 }
 export default {
   formateDateAndTimeToString,
