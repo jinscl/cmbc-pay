@@ -94,7 +94,7 @@ export default {
         };
           console.log("searchParams"+searchParams.areaCode);
         let res = await this.$Http.getNtcInfo(searchParams, false, {
-            baseURL: "http://125.35.5.131:8804"
+            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
           });
         console.log("通知书详情查询结果"+res);
         if(res){
