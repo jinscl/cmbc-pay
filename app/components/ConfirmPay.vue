@@ -94,7 +94,7 @@ export default {
         areaCode: areaCode,
         data: this.$route.params.ntcDetails
       }, false, {
-        baseURL: 'http://wxnontax.vipgz1.idcfengye.com',
+        baseURL: 'http://ydckgj-xs-dev.bcs.cmburl.cn',
       });
       this.bankPayRes = bankPayRes;
       console.log(bankPayRes);

@@ -6,8 +6,8 @@ import commonApi from './commonApi';
 // commonApi循环遍历输出不同的请求方法
 axios.defaults.withCredentials=true;
 let instance = axios.create({
-    baseURL:'http://wxnontax.vipgz1.idcfengye.com',
-    timeout:5000,
+    baseURL:'http://ydckgj-xs-dev.bcs.cmburl.cn',
+    timeout:10000,
 });
 // 包裹请求方法的容器
 const Http = {};

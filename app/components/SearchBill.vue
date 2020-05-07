@@ -4,7 +4,7 @@
        <div class="item-row">
         <div class="item-name">通知单号</div>
         <div class="item-value">
-          <input type="number" class="item-input ntc-id" v-model="ntcId" placeholder="请在此输入"/>
+          <input class="item-input ntc-id" type="text" v-model="ntcId" onkeyup="this.value=this.value.replace(/[^_A-Z0-9_]/g,'');" placeholder="请在此输入"/>
           <i class="el-icon-full-screen" @click="scanBarCode"></i>
           <!-- <img src="../assets/scanBar.png"> -->
         </div>
@@ -60,11 +60,9 @@ export default {
       let self = this;
       cmblapi.scanBarcode({
         success:function(res){
-          console.log("扫描结果："+res.result);
-          console.log("二维码/条形码来源："+res.source);
-          this.ntcId = res.result.ntcId;
-          this.areaCode = res.result.areaCode;
-          self.$alert("扫一扫查询获取通知单成功！");
+          let info = JSON.parse(res.result);
+          self.ntcId = info.ntcId;
+          self.areaCode = info.areaCode;
         },
         fail:function(res){
           console.log("错误代码"+res.errCode);
@@ -88,18 +86,20 @@ export default {
           center: true
         });
       }else{
+        this.isDisabled = false;
         let searchParams = {
             "ntcId": ntcId,
             "areaCode":this.areaCode
         };
           console.log("searchParams"+searchParams.areaCode);
         let res = await this.$Http.getNtcInfo(searchParams, false, {
-            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
+            baseURL: "http://ydckgj-xs-dev.bcs.cmburl.cn"
           });
         console.log("通知书详情查询结果"+res);
         if(res){
           // 获取通知书成功
           if(!res.errorMsg){
+              this.isDisabled = true;
             this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data, orderNo: this.orderNo,date:this.date}});
           }else{
             this.$alert(res.errorMsg, '温馨提示', {
