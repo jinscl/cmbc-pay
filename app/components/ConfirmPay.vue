@@ -39,14 +39,11 @@
           </el-row>
         </div>
       </div>
-<!--      <div class="button-row">-->
-<!--        <el-row>-->
-<!--          <el-button type="primary" @click="returnResult">支付回调</el-button>-->
-<!--        </el-row>-->
-<!--      </div>-->
     </div>
 </template>
 <script>
+import commonUtil from "../js/commonUtil";
+
 export default {
   name1: "ConfirmPay",
   name2: "QueryResult",
@@ -54,9 +51,14 @@ export default {
     msg: String
   },
   mounted() {
+    let userId = this.$StoreJs.getters.userName;
+    if(userId && '' != userId ){
+      console.log(userId);
+    }else{
+      commonUtil.closeWindow();
+    }
     // 初始化页面，通过路由传入的参数，填充详情页面
     let ntcDetails = this.$route.params.ntcDetails;
-    console.log(ntcDetails);
     this.acceptAgencyName = ntcDetails.acceptAgencyName;
     this.payer = ntcDetails.payer;
     this.tatefeeAmt = ntcDetails.tatefeeAmt;
@@ -94,7 +96,7 @@ export default {
         areaCode: areaCode,
         data: this.$route.params.ntcDetails
       }, false, {
-        baseURL: 'http://ydckgj-xs-dev.bcs.cmburl.cn',
+        baseURL: 'http://wxnontax.vipgz1.idcfengye.com',
       });
       this.bankPayRes = bankPayRes;
       console.log(bankPayRes);
@@ -103,13 +105,6 @@ export default {
         if (!bankPayRes.errorMsg) {
           //let bankPayResData = bankPayRes.reqData;
           this.bankPayResJson = JSON.stringify(bankPayRes);
-          // 调用招行一网通支付,参数：柜面支付返回结果转为json,无响应报文
-          // await this.$Http.cmbcBasePay({jsonRequestData:bankPayResJson},true,{
-          //     baseURL:'http://121.15.180.66:801',
-          //   headers:{
-          //     'Content-Type': 'application/x-www-form-urlencoded'
-          //   }
-          // });
           // 调用支付结果校验接口,参数：柜面支付返回结果
           var payForm = document.getElementById("payForm");
           setTimeout(() => {

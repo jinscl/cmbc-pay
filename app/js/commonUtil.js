@@ -30,14 +30,51 @@ function randomString(len) {
   }
   return str;
 }
-function shutDown(){
-  setTimeout(() => {
-    window.opener='';
-    window.close();
-  }, 1500);
+// function closeWindows (){
+//   setTimeout(() => {
+//     window.opener='';
+//     window.close();
+//   }, 1500);
+//   open(location, '_self').close();
+// }
+function shutDown() {
+  var browserName = navigator.appName;
+  if(browserName == "Microsoft Internet Explorer"){
+    var ie7 = (document.all && !window.opera && window.XMLHttpRequest) ? true : false;
+    if (ie7) {
+      //This method is required to close a window without any prompt for IE7 & greater versions.
+      window.open('','_parent','');
+      window.close();
+    } else {
+      //This method is required to close a window without any prompt for IE6
+      this.focus();
+      self.opener = this;
+      self.close();
+    }
+  }else{
+    //For NON-IE Browsers except Firefox which doesnt support Auto Close
+    try{
+      this.focus();
+      self.opener = this;
+      self.close();
+    } catch(e){
+      console.log(e);
+    }
+    try{
+      window.open('','_self','');
+      window.close();
+    } catch(e){
+      console.log(e);
+    }
+  }
+}
+function closeWindow() {
+  window.location.href="about:blank";
+  window.close();
 }
 export default {
   formateDateAndTimeToString,
   randomString,
-  shutDown
+  shutDown,
+  closeWindow
 }

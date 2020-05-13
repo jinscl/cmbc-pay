@@ -6,7 +6,7 @@ import commonApi from './commonApi';
 // commonApi循环遍历输出不同的请求方法
 axios.defaults.withCredentials=true;
 let instance = axios.create({
-    baseURL:'http://ydckgj-xs-dev.bcs.cmburl.cn',
+    baseURL:'http://wxnontax.vipgz1.idcfengye.com',
     timeout:10000,
 });
 // 包裹请求方法的容器
@@ -67,6 +67,7 @@ const loadingOptions = {
 instance.interceptors.request.use(config=>{
     //发起请求前做些什么
     loadingInstance =  Loading.service(loadingOptions);
+    
     // console.log('发起请求前做些什么');
     return config;
 },()=>{

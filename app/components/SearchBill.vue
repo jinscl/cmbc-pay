@@ -2,7 +2,7 @@
     <div class="content">
       <div class="input-wrapper">
        <div class="item-row">
-        <div class="item-name">通知单号</div>
+        <div class="item-name">缴款识别码</div>
         <div class="item-value">
           <input class="item-input ntc-id" type="text" v-model="ntcId" onkeyup="this.value=this.value.replace(/[^_A-Z0-9_]/g,'');" placeholder="请在此输入"/>
           <i class="el-icon-full-screen" @click="scanBarCode"></i>
@@ -15,18 +15,6 @@
           <input type="number" class="item-input" v-model="areaCode" placeholder="请在此输入"/>
         </div>
       </div>
-<!--      <div class="item-row">-->
-<!--          <div class="item-name">订单号</div>-->
-<!--          <div class="item-value">-->
-<!--              <input type="number" class="item-input" v-model="orderNo" placeholder="请在此输入"/>-->
-<!--          </div>-->
-<!--      </div>-->
-<!--      <div class="item-row">-->
-<!--          <div class="item-name">订单日期</div>-->
-<!--          <div class="item-value">-->
-<!--              <input type="number" class="item-input" v-model="date" placeholder="请在此输入"/>-->
-<!--          </div>-->
-<!--      </div>-->
       <div class="button-row">
           <el-row>
               <el-button type="primary" :disabled="isDisabled" @click="getNtcInfoFromCZ">查询</el-button>
@@ -37,6 +25,7 @@
 </template>
 <script>
 import cmblapi from 'cmblapi'
+import commonUtil from '../js/commonUtil'
 export default {
   name: 'SearchBill',
   data:function(){
@@ -44,8 +33,18 @@ export default {
         ntcId:"",
         areaCode:"",
         orderNo:"",
-        date:""
+        date:"",
+        financeData:""
     }
+  },
+  mounted() {
+    let userId = this.$StoreJs.getters.userName;
+    if(userId && '' != userId ){
+        console.log(userId);
+    }else{
+      commonUtil.closeWindow();
+    }
+    this.financeData = this.$route.params.financeData;
   },
   computed:{
     isDisabled:function(){
@@ -93,14 +92,14 @@ export default {
         };
           console.log("searchParams"+searchParams.areaCode);
         let res = await this.$Http.getNtcInfo(searchParams, false, {
-            baseURL: "http://ydckgj-xs-dev.bcs.cmburl.cn"
+            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
           });
         console.log("通知书详情查询结果"+res);
         if(res){
           // 获取通知书成功
           if(!res.errorMsg){
               this.isDisabled = true;
-            this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data, orderNo: this.orderNo,date:this.date}});
+            this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data}});
           }else{
             this.$alert(res.errorMsg, '温馨提示', {
               confirmButtonText: '确定',

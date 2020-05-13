@@ -24,23 +24,14 @@ export default {
     };
   },
   created() {
-    // 校验登录信息
+    // 测试数据
     let logintest = {
-      // "resultType":"Y",
-      // "cryptType":"2",
-      // "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
+      "resultType":"Y",
+      "cryptType":"2",
+      "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
     };
-     //this.$router.push("/search");
+    // 校验登录信息
     this.validateLogin(logintest);
-    // 柜面不存在登录信息
-    // // 跨域测试数据
-    // this.$Http.test({financeCode:"110000",fieldDisptype:1},true,{
-    //               // baseURl:'http://10.10.66.57:8801',
-    //               params:{tokenid:"A5E17230D947B868A071D6AE00E94EFF"}
-    //           }).then(
-    //   (res)=>{
-    //     console.log(res);
-    //   });
   },
   methods: {
     goBack() {
@@ -51,22 +42,27 @@ export default {
      * @param loginData 不存在：查询登录信息，存在：保存登录信息
      */
     async validateLogin(loginData) {
+      // 统计登录次数
       this.count++;
+      // 校验登录信息
       let res = await this.$Http.httpLogin(loginData, false, {
-        baseURL: "http://ydckgj-xs-dev.bcs.cmburl.cn"
+        baseURL: "http://wxnontax.vipgz1.idcfengye.com"
       });
       if (res) {
-        // let tst = this.$Http.getNtcInfo({areaCode:"12",ntcId:"12"},false,{
-        //   baseURl: "http://ydckgj-xs-dev.bcs.cmburl.cn"
-        // });
-        // console.log("通知单"+tst);
         if(res.errorMsg){
           if(this.count >= 2){
             commonUtil.shutDown();
           }
+          // 失败则再次拉起登录
           this.login();
         }else{
-          await this.$router.push("/search");
+          // 获取区划信息
+          let financeData =await this.$Http.getFinanceCode({}, false, {
+            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
+          });
+          // 本地缓存用户信息
+          this.$StoreJs.commit('handleUserName',res.corpInfo.uniqueUserID);
+          await this.$router.push({name: 'search', params: {financeData: financeData}});
           return res;
         }
       } else {
@@ -81,13 +77,10 @@ export default {
     },
     // 登录接口
     async login() {
-      // 获取小程序商户号，签名等信息
+      // 获取小程序商户号，签名等信息，登录所需数据
       let preLoginInfo = await this.$Http.requestPreLoginData();
       if (preLoginInfo) {
-        // 柜面小程序登录信息不存在
-        // this.$alert(preLoginInfo, "温馨提示", {
-        //   confirmButtonText: "确定"
-        // });
+        // 柜面小程序登录信息没有错误
         if (!preLoginInfo.errorMsg) {
           /**
            * 招商银行官方用户登录和认证接口（进行客户核身，并获取部分客户信息，根据商户号不同，返回不同的权限内容）
@@ -98,6 +91,7 @@ export default {
            * @returns resultType string 登录授权结果：Y表示成功，N表示失败
            */
           let self = this;
+          // 拉起登录
           cmblapi.merchantLogin({
             corpNo: preLoginInfo.corpNo,
             reAuth: preLoginInfo.reAuth,
@@ -113,14 +107,13 @@ export default {
               });
               // 手机银行登录成功后，返回加密并签名的用户信息
               if (res.resultType === "Y") {
-                self.$router.push("/search");
-                //将小程序登录信息保存到柜面
+                //将小程序登录信息发送至柜面校验、保存等
                 self.validateLogin(res);
               } else {
                 this.$alert("登录授权失败，请稍后重试！", "温馨提示", {
                   confirmButtonText: "确定"
                 });
-                //commonUtil.shutDown();
+                commonUtil.shutDown();
               }
             },
             fail: function(res) {

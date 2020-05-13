@@ -32,7 +32,7 @@ module.exports = {
                 }
             },
             '/nontax':{
-                target: 'http://ydckgj-xs-dev.bcs.cmburl.cn', // 柜面服务器地址
+                target: 'http://wxnontax.vipgz1.idcfengye.com', // 柜面服务器地址
                 changeOrigin: true,
                 pathRewrite: { //重写路径 比如'/ebank/aaa/ccc'重写为'/aaa/ccc'
                     '^/nontax': ''

@@ -19,6 +19,10 @@ const COMMON_API = {
         method:'post',
         url:'/CmbHttpController/CMB/queryNtcFromCz',
     },
+    getFinanceCode:{
+        method:'get',
+        url:'/CmbHttpController/getFinanceCode',
+    },
     // 支付接口，银行记录核心，支付数据加密
     commonPay:{
         method:'post',
