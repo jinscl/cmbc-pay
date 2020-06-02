@@ -5,8 +5,9 @@ import commonApi from './commonApi';
 
 // commonApi循环遍历输出不同的请求方法
 axios.defaults.withCredentials=true;
+axios.defaults.crossDomain = true;
 let instance = axios.create({
-    baseURL:'http://wxnontax.vipgz1.idcfengye.com',
+    baseURL:commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain,
     timeout:10000,
 });
 // 包裹请求方法的容器
@@ -67,7 +68,7 @@ const loadingOptions = {
 instance.interceptors.request.use(config=>{
     //发起请求前做些什么
     loadingInstance =  Loading.service(loadingOptions);
-    
+
     // console.log('发起请求前做些什么');
     return config;
 },()=>{
@@ -88,7 +89,7 @@ instance.interceptors.response.use(res=>{
     console.log('响应错误');
     console.log(res);
     loadingInstance.close();
-    MessageBox.alert('响应错误，请稍后重试', '温馨提示', {
+    MessageBox.alert('响应错误，请稍后重试'+res.status, '温馨提示', {
         confirmButtonText: '确定',
     });
 })

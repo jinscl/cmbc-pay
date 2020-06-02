@@ -15,23 +15,31 @@
 <script>
 import cmblapi from "cmblapi";
 import commonUtil from './js/commonUtil'
+import commonApi from './service/commonApi'
 
 export default {
   name: "app",
   data: function() {
     return {
-      count : 0,
+      count : 0
     };
   },
   created() {
+    //this.login();
     // 测试数据
     let logintest = {
-      "resultType":"Y",
-      "cryptType":"2",
-      "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
+      // "resultType":"Y",
+      // "cryptType":"2",
+      // "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
     };
-    // 校验登录信息
-    this.validateLogin(logintest);
+    let userCookie = this.$StoreJs.getUserCookie();
+    if(userCookie && ''!=userCookie){
+      this.$alert("缓存的"+userCookie);
+      this.$router.push("/search");
+    }else {
+      // 校验登录信息
+      this.validateLogin(logintest);
+    }
   },
   methods: {
     goBack() {
@@ -46,24 +54,21 @@ export default {
       this.count++;
       // 校验登录信息
       let res = await this.$Http.httpLogin(loginData, false, {
-        baseURL: "http://wxnontax.vipgz1.idcfengye.com"
+        baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
       });
       if (res) {
         if(res.errorMsg){
           if(this.count >= 2){
             commonUtil.shutDown();
+          }else {
+            // 失败则再次拉起登录
+            this.login();
           }
-          // 失败则再次拉起登录
-          this.login();
         }else{
-          // 获取区划信息
-          let financeData =await this.$Http.getFinanceCode({}, false, {
-            baseURL: "http://wxnontax.vipgz1.idcfengye.com"
-          });
           // 本地缓存用户信息
-          this.$StoreJs.commit('handleUserName',res.corpInfo.uniqueUserID);
-          await this.$router.push({name: 'search', params: {financeData: financeData}});
-          return res;
+          this.$StoreJs.setUserCookie(res.corpInfo.uniqueUserID,'1');
+          // 获取区划信息
+          this.$router.push("/search");
         }
       } else {
         if(this.count >= 2) {
@@ -101,7 +106,6 @@ export default {
               sign: preLoginInfo.authInfo.sign
             },
             success: function(res) {
-              console.log("招行登录成功回调");
               self.$alert("授权登录成功", "温馨提示", {
                 confirmButtonText: "确定"
               });

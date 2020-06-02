@@ -33,9 +33,10 @@ const COMMON_API = {
         method:'post',
         url:'/CmbHttpController/CMB/checkPayResult'
     },
-    test:{
-        method:'post',
-        url:'/CmbHttpController/payReturn'
+    forwardUrl:{
+        protocol:'http://',
+        ip:'yyngrok.vipgz1.idcfengye',
+        domain:'.com',
     }
 }
 export default COMMON_API;

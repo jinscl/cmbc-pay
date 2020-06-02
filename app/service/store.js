@@ -1,27 +1,61 @@
-import Vuex from 'vuex';
-import Vue from "vue";
-
-Vue.use(Vuex)
-const actions = {}
-const mutations = {
-    handleUserName: (state, user_name) => {
-        state.user_name = user_name
-        // 把登录的用户的名保存到localStorage中，防止页面刷新，导致vuex重新启动，用户名就成为初始值（初始值为空）的情况
-        localStorage.setItem('user_name', user_name)
+//设置cookie
+function setUserCookie(userName, exdays){
+    var exdate = new Date(); //获取时间
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //字符串拼接cookie
+    window.document.cookie = "userName" + "=" + userName + ";path=/;expires=" + exdate.toGMTString();
+}
+function setFinanceCookie(financeData, exdays){
+    var exdate = new Date(); //获取时间
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //字符串拼接cookie
+    window.document.cookie = "financeData" + "=" + financeData + ";path=/;expires=" + exdate.toGMTString();
+}
+//读取cookie
+function getUserCookie() {
+    let result = '';
+    if (document.cookie.length > 0) {
+        var arr = document.cookie.split('; '); //这里显示的格式需要切割一下自己可输出看下
+        for (var i = 0; i < arr.length; i++) {
+            var arr2 = arr[i].split('='); //再次切割
+            //判断查找相对应的值
+            if (arr2[0] == 'userName') {
+                result = arr2[1]; //保存到保存数据的地方
+                return result;
+            }else{
+                continue;
+            }
+        }
     }
+    return result;
 }
-const state = {
-    user_name: '' || localStorage.getItem('user_name')
+//读取cookie
+function getFinanceCookie() {
+    let result = '';
+    if (document.cookie.length > 0) {
+        var arr = document.cookie.split('; '); //这里显示的格式需要切割一下自己可输出看下
+        for (var i = 0; i < arr.length; i++) {
+            var arr2 = arr[i].split('='); //再次切割
+            //判断查找相对应的值
+            if (arr2[0] == 'financeData') {
+                result = arr2[1]; //保存到保存数据的地方
+                return result;
+            }else{
+                continue;
+            }
+        }
+    }
+    return result;
 }
-// getters 只会依赖 state 中的成员去更新
-const getters = {
-    userName: (state) => state.user_name
+//清除cookie
+function clearCookie() {
+    this.setFinanceCookie("", -1); //修改2值都为空，天数为负1天就好了
+    this.setUserCookie("", -1);
 }
-
-const store = new Vuex.Store({
-    actions,
-    mutations,
-    state,
-    getters
-})
-export default store;
+export default {
+    clearCookie,
+    getFinanceCookie,
+    getUserCookie,
+    setUserCookie,
+    setFinanceCookie
+}

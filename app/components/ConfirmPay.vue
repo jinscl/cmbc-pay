@@ -21,11 +21,6 @@
           <label class="item-name">应缴总金额</label>
           <span class="item-value">{{totalAmt}}</span>
         </div>
-<!--        <div class="button-row">-->
-<!--          <el-row>-->
-<!--            <el-button type="primary" @click="queryResult">查询支付</el-button>-->
-<!--          </el-row>-->
-<!--        </div>-->
       </div>
       <div>
         <form id="payForm" name="payForm" action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
@@ -43,6 +38,7 @@
 </template>
 <script>
 import commonUtil from "../js/commonUtil";
+import commonApi from '../service/commonApi'
 
 export default {
   name1: "ConfirmPay",
@@ -51,9 +47,9 @@ export default {
     msg: String
   },
   mounted() {
-    let userId = this.$StoreJs.getters.userName;
+    let userId = this.$StoreJs.getUserCookie();
     if(userId && '' != userId ){
-      console.log(userId);
+      this.$alert(userId);
     }else{
       commonUtil.closeWindow();
     }
@@ -96,7 +92,7 @@ export default {
         areaCode: areaCode,
         data: this.$route.params.ntcDetails
       }, false, {
-        baseURL: 'http://wxnontax.vipgz1.idcfengye.com',
+        baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain,
       });
       this.bankPayRes = bankPayRes;
       console.log(bankPayRes);
