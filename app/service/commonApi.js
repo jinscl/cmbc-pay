@@ -4,12 +4,12 @@ const COMMON_API = {
         method:'post',
         url:"/netpayment/BaseHttp.dll?MB_APPPay"
     },
-    // 登录前数据处理接口
+    // 登录前请求登录数据接口
     requestPreLoginData:{
         method:'post',
         url:'/CmbHttpController/requestPreLoginData'
     },
-    // 缓存用户登录信息
+    // 用户登录信息校验
     httpLogin:{
         method:'post',
         url:'/CmbHttpController/validateLogin',
@@ -19,11 +19,12 @@ const COMMON_API = {
         method:'post',
         url:'/CmbHttpController/CMB/queryNtcFromCz',
     },
+    // 获取库中区划信息
     getFinanceCode:{
         method:'get',
         url:'/CmbHttpController/getFinanceCode',
     },
-    // 支付接口，银行记录核心，支付数据加密
+    // 柜面支付接口，银行记录核心，支付数据加密
     commonPay:{
         method:'post',
         url:'/CmbHttpController/CMB/payNtc'
@@ -33,10 +34,11 @@ const COMMON_API = {
         method:'post',
         url:'/CmbHttpController/CMB/checkPayResult'
     },
+    // 请求路径
     forwardUrl:{
         protocol:'http://',
-        ip:'yyngrok.vipgz1.idcfengye',
-        domain:'.com',
+        ip:'szfs-bankend2.bcs.cmburl',
+        domain:'.cn',
     }
 }
 export default COMMON_API;

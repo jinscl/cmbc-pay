@@ -27,9 +27,6 @@ for(let key in commonApi){
             newParams = new FormData();
             for(let i in params){
                 newParams.append(i,params[i]);
-                // console.log(params);
-                // console.log(newParams.get('jsonRequestData'));
-                // console.log(newParams);
             }
         }else{
             newParams = params;
@@ -68,8 +65,7 @@ const loadingOptions = {
 instance.interceptors.request.use(config=>{
     //发起请求前做些什么
     loadingInstance =  Loading.service(loadingOptions);
-
-    // console.log('发起请求前做些什么');
+    console.log('发起请求前做些什么');
     return config;
 },()=>{
     // 请求错误
@@ -89,7 +85,7 @@ instance.interceptors.response.use(res=>{
     console.log('响应错误');
     console.log(res);
     loadingInstance.close();
-    MessageBox.alert('响应错误，请稍后重试'+res.status, '温馨提示', {
+    MessageBox.alert('响应错误，请稍后重试', '温馨提示', {
         confirmButtonText: '确定',
     });
 })

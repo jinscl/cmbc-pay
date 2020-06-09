@@ -12,19 +12,11 @@
       <div class="item-row">
           <div class="item-name">区划代码</div>
           <div class="item-value">
-<!--      <Form :model="financeData" ref="formItem" :rules="ruleInline" :label-width="80">-->
-<!--          <FormItem label="区划代码 : " prop="sendValue">-->
               <el-select class="item-input" v-model="areaCode">
                   <el-option v-for="item in financeData" :value="item.chr_code" :key="item.chr_code">
                       {{item.chr_name}}:{{item.chr_code}}
                   </el-option>
               </el-select>
-<!--          </FormItem>-->
-<!--      </Form>-->
-<!--      <div class="item-row">-->
-<!--        <div class="item-name">区划代码</div>-->
-<!--        <div class="item-value">-->
-<!--          <input type="number" class="item-input" v-model="areaCode" placeholder="请在此输入"/>-->
         </div>
       </div>
       <div class="button-row">
@@ -48,17 +40,6 @@ export default {
         financeData:[]
     }
   },
-  // updated() {
-  //   let financeCookie = this.$StoreJs.getFinanceCookie();
-  //   if(financeCookie && '' != financeCookie){
-  //       this.financeData = JSON.parse(financeCookie)
-  //   }else {
-  //       this.financeData = this.$Http.getFinanceCode({}, false, {
-  //           baseURL: commonApi.forwardUrl.url
-  //       });
-  //       this.$StoreJs.setFinanceCode(JSON.stringify(this.financeData));
-  //   }
-  // },
   async mounted() {
 
     let userId = this.$StoreJs.getUserCookie();
@@ -79,24 +60,6 @@ export default {
     }else{
       commonUtil.closeWindow();
     }
-    //let finance = localStorage.getItem("finance");
-    // let data = JSON.parse(finance);
-    // for(let i in data){
-    //   this.financeData.push(data[i]);      //this指向vue实例
-    // }
-    //   let financeCookie2 = this.$StoreJs.getFinanceCookie();
-    //   if(financeCookie2 && '' != financeCookie2 ){
-    //       this.financeData = JSON.parse(financeCookie2)
-    //       this.$alert("第二次"+this.financeData);
-    //   }else{
-    //       this.$alert("测试打印，这里是因为financeCookie被清除且未获取才弹窗，正式环境页面会被关闭，这里是未解决的bug，需要行方协调");
-    //       //commonUtil.closeWindow();
-    //   }
-    // if(this.financeData && '' != this.financeData){
-    //     this.$alert("校验"+this.financeData);
-    // }else{
-    //     this.$alert("获取区划失败！");
-    // }
   },
   computed:{
     isDisabled:function(){
@@ -159,14 +122,6 @@ export default {
             })
           }
         }
-        // let testData = {
-        //     acceptAgencyName: "深圳财政局",
-        //     payer: "jscl",
-        //     tatefeeAmt: "200.00",
-        //     totalAmt: "1000.00",
-        //     ntcStatus: "未支付"
-        // }
-        // this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails: testData}});
       }
     },
   }

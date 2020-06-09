@@ -30,13 +30,6 @@ function randomString(len) {
   }
   return str;
 }
-// function closeWindows (){
-//   setTimeout(() => {
-//     window.opener='';
-//     window.close();
-//   }, 1500);
-//   open(location, '_self').close();
-// }
 function shutDown() {
   var browserName = navigator.appName;
   if(browserName == "Microsoft Internet Explorer"){

@@ -2,7 +2,7 @@
     <div class="content">
       <div class="wrapper">
         <div class="item-row">
-          <label class="item-name">执行单位名称</label>
+          <label class="item-name">执收单位名称</label>
           <span class="item-value">{{acceptAgencyName}}</span>
         </div>
         <div class="item-row">
@@ -120,9 +120,9 @@ export default {
 <style scoped>
 .item-row {
   display: flex;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 1rem;
+  /*height: 40px;*/
+  /*line-height: 40px;*/
+  padding: 0.5rem 1rem;
   background-color: #fff;
   border-top: 1px solid #eeeeee;
 }
