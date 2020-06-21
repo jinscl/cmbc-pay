@@ -34,7 +34,7 @@ export default {
       // "body":"u9su4Mi92g8b2l1GjBEllZQBpjFxRbKYY4MNjgS7qyS4GajzsQbyHPC6Xon2lc+gPjF3kjQalI2WNWw3UpY6M3RU4B6GFEC6IWf6KxYtcF4D9BJ6SrnW+LG1ncaArA8yJaAnlF42uMP4pHnWfJcIwBlobdjBJtCM/jgyvqSDq8EbGuUbEzfTBdWNGul6Zfr4MfvQFNE/KcsETGb6HrXayCR+ZD7aQ6dfk4wdd47Lpw14apcdMK8S3YaoOWN5NTgFgvqN8CyoZWJWFtZvntMozOWfKcgSIC5iTnVQsDYtnyvoPXvLMQRK2RngCMfHNyj8KHmtqLvapwCimVrD34/vV3n4WmQ4d+yPpMthMwg9NH6dxuC92tmfmeSNnfB3Ru3sZyo5PlxCrAyEaP7V2nnMg+JC9KuBf43TcrvQFAMJ9/YzjnYQLw4uVH58q0ebCcCY5Wvoda74aMRM+uWYY8RTFclmCyyyCEcttY1XzDS+zOCDu6rhjiDswDXno+YWbgU3G2skHRoMMxjOGmCUS1u6rrHp+6ERZa/YiRH77PFcilAsIbINkmBKgm8r/qe3m81nO8u2U6pEHp4="
       };
      */
-    this.$alert("created生命周期");
+    //this.$alert("created生命周期");
     /**
      * 从缓存中获取用户唯一标识，本意也是为了生命周期考虑，后来是为了前端访问控制，如果vue实例和缓存不被销毁那么在这里可以派上用场
      */
@@ -45,7 +45,7 @@ export default {
      * 2.false: 重新拉起登录
      */
     if(userCookie && ''!=userCookie){
-      this.$alert("缓存的"+userCookie);
+      //this.$alert("缓存的"+userCookie);
       this.$router.push("/search");
     }else {
       /**
