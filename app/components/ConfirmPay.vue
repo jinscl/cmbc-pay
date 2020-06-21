@@ -26,7 +26,7 @@
         <form id="payForm" name="payForm" action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
           <input type="hidden" name="jsonRequestData" v-bind:value="bankPayResJson"/>
           <input type="hidden" name="charset" value="utf-8"/>
-<!--          <input type="submit" value="提交"/>-->
+<!--      <input type="submit" value="提交"/>-->
         </form>
         <div class="button-row">
           <el-row>
@@ -47,6 +47,9 @@ export default {
     msg: String
   },
   mounted() {
+    /**
+     * 从缓存中获取用户唯一标识
+     */
     let userId = this.$StoreJs.getUserCookie();
     if(userId && '' != userId ){
       this.$alert(userId);
@@ -68,24 +71,25 @@ export default {
       tatefeeAmt: "",//滞纳金
       totalAmt: "",//应缴总金额
       ntcStatus: "",//通知书状态
-      bankPayResJson:"",
-      bankPayRes:""
+      bankPayResJson:"",//提交一网通支付的数据
+      bankPayRes:"" //从后台获取一网通支付的数据
     };
   },
   methods: {
 
     /**
      * 通用支付
-     * 第一步：柜面支付：记录核心日志，并加密返回前台
+     * 第一步：调用柜面支付接口，获取订单信息：记录核心日志，并加密返回前台
      * 第二步：调用招行一网通支付：网页直接展示结果，无响应报文
-     * 第三步：调用支付结果校验
      * @param 通知单号+通知单详情
      * @returns 错误信息errorMsg,成功信息successMsg
      */
     async confirmPay() {
-
       let ntcId = this.$route.params.ntcId;
       let areaCode = this.$route.params.areaCode;
+      /**
+       * 调用柜面接口
+       */
       // ⚠️ 参数统一采用驼峰命名方式
       let bankPayRes = await this.$Http.commonPay({
         ntcId: ntcId,
@@ -95,7 +99,6 @@ export default {
         baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain,
       });
       this.bankPayRes = bankPayRes;
-      console.log(bankPayRes);
       // 柜面支付接口畅通
       if (bankPayRes) {
         if (!bankPayRes.errorMsg) {
@@ -103,6 +106,9 @@ export default {
           this.bankPayResJson = JSON.stringify(bankPayRes);
           // 调用支付结果校验接口,参数：柜面支付返回结果
           var payForm = document.getElementById("payForm");
+          /**
+           * 调用一网通支付
+           */
           setTimeout(() => {
             payForm.submit();
           }, 1000);

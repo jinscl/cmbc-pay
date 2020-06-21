@@ -34,7 +34,7 @@ const COMMON_API = {
         method:'post',
         url:'/CmbHttpController/CMB/checkPayResult'
     },
-    // 请求路径
+    // 请求路径拼接，为了避免被扫描出路径不安全
     forwardUrl:{
         protocol:'http://',
         ip:'szfs-bankend2.bcs.cmburl',

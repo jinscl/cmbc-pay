@@ -41,26 +41,29 @@ export default {
     }
   },
   async mounted() {
-
+      /**
+       * 从cookie中获取用户唯一标识、区划等信息
+       * 如果用户唯一标识存在则验证区划
+       * 不存在则关闭页面，为非法访问
+       */
     let userId = this.$StoreJs.getUserCookie();
     let financeCookie = this.$StoreJs.getFinanceCookie();
-    console.log(userId);
     if(userId && '' != userId ){
-      this.$alert(userId);
       if(financeCookie && '' != financeCookie){
           this.financeData = JSON.parse(financeCookie)
-          this.$alert("id时"+this.financeData);
       }else {
           this.financeData = await this.$Http.getFinanceCode({}, false, {
               baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
           });
           this.$StoreJs.setFinanceCookie(JSON.stringify(this.financeData));
-          this.$alert("获取"+this.financeData);
       }
     }else{
       commonUtil.closeWindow();
     }
   },
+    /**
+     * 计算查询按钮是否可访问
+     */
   computed:{
     isDisabled:function(){
       return ((this.ntcId && this.areaCode) ? false : true)
@@ -79,16 +82,15 @@ export default {
           self.areaCode = info.areaCode;
         },
         fail:function(res){
-          console.log("错误代码"+res.errCode);
-          console.log("错误信息"+res.errMsg);
-          self.$alert("扫一扫查询获取通知单失败！");
+          self.$alert("扫描通知单信息失败！信息为："+res);
         }
       })
 
     },
     /**
-     * 从财政查询通知单详情
+     * 从后台查询通知单详情
      * @param ntcId 通知单
+     * @param areaCode 区划
      * @returns 通知单详情
      */
     async getNtcInfoFromCZ() {
@@ -105,11 +107,9 @@ export default {
             "ntcId": ntcId,
             "areaCode":this.areaCode
         };
-          console.log("searchParams"+searchParams.areaCode);
         let res = await this.$Http.getNtcInfo(searchParams, false, {
             baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
           });
-        console.log("通知书详情查询结果"+res);
         if(res){
           // 获取通知书成功
           if(!res.errorMsg){

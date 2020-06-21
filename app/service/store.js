@@ -1,17 +1,28 @@
-//设置cookie
+/**
+ * 设置用户唯一标识cookie
+ */
 function setUserCookie(userName, exdays){
-    var exdate = new Date(); //获取时间
-    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //获取时间
+    var exdate = new Date();
+    //保存的天数
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays);
     //字符串拼接cookie
     window.document.cookie = "userName" + "=" + userName + ";path=/;expires=" + exdate.toGMTString();
 }
+/**
+ * 设置区划cookie
+ */
 function setFinanceCookie(financeData, exdays){
-    var exdate = new Date(); //获取时间
-    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //获取时间
+    var exdate = new Date();
+    //保存的天数
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays);
     //字符串拼接cookie
     window.document.cookie = "financeData" + "=" + financeData + ";path=/;expires=" + exdate.toGMTString();
 }
-//读取cookie
+/**
+ * 读取用户唯一标识cookie
+ */
 function getUserCookie() {
     let result = '';
     if (document.cookie.length > 0) {
@@ -29,7 +40,9 @@ function getUserCookie() {
     }
     return result;
 }
-//读取cookie
+/**
+ * 读取区划cookie
+ */
 function getFinanceCookie() {
     let result = '';
     if (document.cookie.length > 0) {
@@ -47,9 +60,12 @@ function getFinanceCookie() {
     }
     return result;
 }
-//清除cookie
+
+/**
+ * 清除所有cookie
+ */
 function clearCookie() {
-    this.setFinanceCookie("", -1); //修改2值都为空，天数为负1天就好了
+    this.setFinanceCookie("", -1); //修改值都为空，天数为负1天就好了
     this.setUserCookie("", -1);
 }
 export default {
