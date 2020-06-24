@@ -94,7 +94,9 @@ export default {
       let bankPayRes = await this.$Http.commonPay({
         ntcId: ntcId,
         areaCode: areaCode,
-        data: this.$route.params.ntcDetails
+        //data: this.$route.params.ntcDetails
+        totalAmt: this.$route.params.ntcDetails.totalAmt,
+        acceptAgencyCode: this.$route.params.ntcDetails.acceptAgencyCode
       }, false, {
         baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain,
       });
