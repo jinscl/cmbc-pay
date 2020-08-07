@@ -2,6 +2,10 @@
     <div class="content">
       <div class="wrapper">
         <div class="item-row">
+          <label class="item-name">通知书单号</label>
+          <span class="item-value">{{ntcId}}</span>
+        </div>
+        <div class="item-row">
           <label class="item-name">执收单位名称</label>
           <span class="item-value">{{acceptAgencyName}}</span>
         </div>
@@ -11,11 +15,15 @@
         </div>
         <div class="item-row">
           <label class="item-name">通知书状态</label>
-          <span class="item-value">{{ntcStatus}}</span>
+          <span class="item-value">{{cnNtcStatus}}</span>
         </div>
         <div class="item-row">
           <label class="item-name">总滞纳金</label>
           <span class="item-value">{{tatefeeAmt}}</span>
+        </div>
+        <div class="item-row">
+          <label class="item-name">加罚和减免共计</label>
+          <span class="item-value">{{penaltyAndDerateAmt}}</span>
         </div>
         <div class="item-row">
           <label class="item-name">应缴总金额</label>
@@ -30,7 +38,7 @@
         </form>
         <div class="button-row">
           <el-row>
-            <el-button type="primary" @click="confirmPay">确认支付</el-button>
+            <el-button type="primary" :disabled="cantClick" v-show="show" @click="confirmPay">确认支付</el-button>
           </el-row>
         </div>
       </div>
@@ -41,8 +49,7 @@ import commonUtil from "../js/commonUtil";
 import commonApi from '../service/commonApi'
 
 export default {
-  name1: "ConfirmPay",
-  name2: "QueryResult",
+  name: "ConfirmPay",
   props: {
     msg: String
   },
@@ -57,22 +64,55 @@ export default {
       commonUtil.closeWindow();
     }
     // 初始化页面，通过路由传入的参数，填充详情页面
+    this.ntcId=this.$route.params.ntcId;
     let ntcDetails = this.$route.params.ntcDetails;
     this.acceptAgencyName = ntcDetails.acceptAgencyName;
     this.payer = ntcDetails.payer;
     this.tatefeeAmt = ntcDetails.tatefeeAmt;
     this.totalAmt = ntcDetails.totalAmt;
     this.ntcStatus = ntcDetails.ntcStatus;
+    this.penaltyAndDerateAmt = this.totalAmt-this.tatefeeAmt;
+    if(this.ntcStatus){
+      if(this.ntcStatus=='' || this.ntcStatus=='02' || this.ntcStatus=='00'){
+        this.cnNtcStatus=this.ntcStatus+"待支付";
+        this.show=true;
+        this.cantClick = !(this.ntcStatus=='' || this.ntcStatus=='02' || this.ntcStatus=='00');
+      } else if(this.ntcStatus=='03' || this.ntcStatus=='04'){
+        this.cnNtcStatus=this.ntcStatus+"未缴款至财政，需联系行方处理";
+        this.cantClick = true;
+        this.show=false;
+        this.$alert("单号为:"+ this.$route.params.ntcId +"的通知书状态异常,请联系银行人员处理！");
+      }else if(this.ntcStatus=='01'){
+        this.cnNtcStatus=this.ntcStatus+"未缴款至财政，需联系行方处理";
+        this.cantClick = true;
+        this.show=false;
+        this.$alert("单号为:"+ this.$route.params.ntcId +"的通知书已支付,无需再次支付,但是状态异常,请稍后再次查询,如果再次遇到本问题,请联系银行人员处理！");
+      }else{
+        this.cnNtcStatus=this.ntcStatus+"已缴款至财政";
+        this.cantClick = true;
+        this.show=false;
+        this.$alert("单号为:"+ this.$route.params.ntcId +"的通知书已缴费,并与财政已确认,无需再次支付！");
+      }
+    }else{
+      this.cnNtcStatus="未定义,需联系行方处理";
+      this.show=false;
+      this.cantClick=true;
+    }
   },
   data: function() {
     return {
+      show:false,//是否显示
+      cantClick:true,//是否不能点击
       acceptAgencyName: "",//执收单位名称
       payer: "",//缴款人
       tatefeeAmt: "",//滞纳金
       totalAmt: "",//应缴总金额
       ntcStatus: "",//通知书状态
       bankPayResJson:"",//提交一网通支付的数据
-      bankPayRes:"" //从后台获取一网通支付的数据
+      bankPayRes:"",//从后台获取一网通支付的数据
+      penaltyAndDerateAmt: "",//加罚+减免
+      cnNtcStatus:"",//中文状态
+      ntcId:""//通知书单号
     };
   },
   methods: {
@@ -85,7 +125,8 @@ export default {
      * @returns 错误信息errorMsg,成功信息successMsg
      */
     async confirmPay() {
-      let ntcId = this.$route.params.ntcId;
+      this.cantClick=true;
+      let ntcId = this.ntcId;
       let areaCode = this.$route.params.areaCode;
       /**
        * 调用柜面接口
@@ -111,9 +152,7 @@ export default {
           /**
            * 调用一网通支付
            */
-          setTimeout(() => {
-            payForm.submit();
-          }, 1000);
+          payForm.submit();
         } else {
           this.$alert(bankPayRes.errorMsg, '温馨提示error', {
             confirmButtonText: '确定'
