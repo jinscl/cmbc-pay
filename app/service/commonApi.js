@@ -24,6 +24,11 @@ const COMMON_API = {
         method:'get',
         url:'/CmbHttpController/getFinanceCode',
     },
+    // 返回商户使用，查询订单信息
+    checkNtcOrder:{
+        method:'post',
+        url:'/CmbHttpController/checkNtcOrder',
+    },
     // 柜面支付接口，银行记录核心，支付数据加密
     commonPay:{
         method:'post',
@@ -37,8 +42,8 @@ const COMMON_API = {
     // 请求路径拼接，为了避免被扫描出路径不安全
     forwardUrl:{
         protocol:'http://',
-        ip:'szfs-bankend2.bcs.cmburl',
-        domain:'.cn',
+        ip:'127.0.0.1:8383',
+        domain:'',
     }
 }
 export default COMMON_API;

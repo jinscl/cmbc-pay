@@ -1,6 +1,6 @@
 {
-  "name": "cmbc-pay",
-  "version": "0.1.0",
+  "name": "cmb-netpay",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "cmblapi": "http://open.cloud.cmbchina.com/api/ApiStoreInfo/DownLoadFile?itemId=f0fb75ca-e0a5-4948-8a81-23b29cea4042",
+    "cmblapi": "http://wxts.cmburl.cn/appdown/cmblapi.min.tar.gz",
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
     "js-base64": "^2.5.2",

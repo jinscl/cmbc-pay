@@ -7,7 +7,7 @@ import store from './service/store';
 import App from './App.vue';
 import SearchBill from './components/SearchBill.vue';
 import ConfirmPay from './components/ConfirmPay.vue';
-
+import QueryResult from './components/QueryResult.vue'
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);
@@ -35,6 +35,14 @@ const router = new VueRouter({
       path: '/pay',
       name: 'pay',
       component: ConfirmPay
+    },
+    {
+      path: '/result/:ntcId/:orderNo/:areaCode',
+      name: 'result',
+      component: QueryResult,
+      meta: {
+        title: '支付结果查询'
+      }
     }
   ]
 })

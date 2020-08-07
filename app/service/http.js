@@ -2,6 +2,7 @@ import axios from 'axios';
 import {MessageBox} from 'element-ui';
 import { Loading } from 'element-ui';
 import commonApi from './commonApi';
+import store from './store.js'
 
 // commonApi循环遍历输出不同的请求方法
 axios.defaults.withCredentials=true;
@@ -9,6 +10,7 @@ axios.defaults.crossDomain = true;
 let instance = axios.create({
     baseURL:commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain,
     timeout:10000,
+    withCredentials:true
 });
 // 包裹请求方法的容器
 const Http = {};
@@ -64,6 +66,9 @@ const loadingOptions = {
 // 拦截器的添加
 instance.interceptors.request.use(config=>{
     //发起请求前做些什么
+    if(store.getUserCookie()){
+        config.headers['USERID'] = store.getUserCookie();
+    }
     loadingInstance =  Loading.service(loadingOptions);
     console.log('发起请求前做些什么');
     return config;
