@@ -47,16 +47,13 @@ export default {
        * 不存在则关闭页面，为非法访问
        */
     let userId = this.$StoreJs.getUserCookie();
-    let financeCookie = this.$StoreJs.getFinanceCookie();
+    this.$alert("缓存的"+userId);
+    console.log(userId);
     if(userId && '' != userId ){
-      if(financeCookie && '' != financeCookie){
-          this.financeData = JSON.parse(financeCookie)
-      }else {
-          this.financeData = await this.$Http.getFinanceCode({}, false, {
-              baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
-          });
-          this.$StoreJs.setFinanceCookie(JSON.stringify(this.financeData));
-      }
+        this.financeData = await this.$Http.getFinanceCode({}, false, {
+            baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
+        });
+        this.$StoreJs.setFinanceCookie(JSON.stringify(this.financeData));
     }else{
       commonUtil.closeWindow();
     }
@@ -113,7 +110,7 @@ export default {
         if(res){
           // 获取通知书成功
           if(!res.errorMsg){
-              this.isDisabled = true;
+            this.isDisabled = true;
             this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data}});
           }else{
             this.$alert(res.errorMsg, '温馨提示', {
