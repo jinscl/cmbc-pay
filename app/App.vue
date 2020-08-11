@@ -1,13 +1,14 @@
 <template>
   <div id="app">
-    <header class="header">
-      <div class="header-icon" @click="goBack">
-        <i class="el-icon-arrow-left"></i>
-      </div>
-      <div class="header-title">
-        <span>通知单缴费</span>
-      </div>
-    </header>
+      <!--  取消topbar-->
+      <!--<header class="header">
+        <div class="header-icon" @click="goBack">
+          <i class="el-icon-arrow-left"></i>
+        </div>
+        <div class="header-title">
+          <span>通知单缴费</span>
+        </div>
+      </header>-->
     <router-view></router-view>
   </div>
 </template>
@@ -55,9 +56,9 @@ export default {
     }
   },
   methods: {
-    goBack() {
+    /*goBack() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push("/");
-    },
+    },*/
     /**
      * 登录校验接口
      * @param loginData 不存在：查询登录信息，因session技术无法使用，现废弃；
