@@ -22,7 +22,7 @@
           <span class="item-value">{{tatefeeAmt}}</span>
         </div>
         <div class="item-row">
-          <label class="item-name">加罚和减免共计</label>
+          <label class="item-name">加罚、减免共计</label>
           <span class="item-value">{{penaltyAndDerateAmt}}</span>
         </div>
         <div class="item-row">
@@ -67,7 +67,10 @@ export default {
      * 从缓存中获取用户唯一标识
      */
     let userId = this.$StoreJs.getUserCookie();
+    this.$alert("缓存的"+userId);
     if(userId && '' != userId ){
+      this.closeDialogVisible=false;
+    }else{
       this.closeDialogVisible=true;
     }
     // 初始化页面，通过路由传入的参数，填充详情页面
