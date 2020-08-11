@@ -22,12 +22,12 @@ const COMMON_API = {
     // 获取库中区划信息
     getFinanceCode:{
         method:'get',
-        url:'/CmbHttpController/getFinanceCode',
+        url:'/CmbHttpController/CMB/getFinanceCode',
     },
     // 返回商户使用，查询订单信息
     checkNtcOrder:{
         method:'post',
-        url:'/CmbHttpController/checkNtcOrder',
+        url:'/CmbHttpController/CMB/checkNtcOrder',
     },
     // 柜面支付接口，银行记录核心，支付数据加密
     commonPay:{

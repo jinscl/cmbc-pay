@@ -42,6 +42,15 @@
           </el-row>
         </div>
       </div>
+      <el-dialog
+              title="提示"
+              :visible.sync="closeDialogVisible"
+              width="30%">
+        <span>用户信息丢失,页面即将关闭</span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="doClose">确 定</el-button>
+                </span>
+      </el-dialog>
     </div>
 </template>
 <script>
@@ -59,9 +68,7 @@ export default {
      */
     let userId = this.$StoreJs.getUserCookie();
     if(userId && '' != userId ){
-      this.$alert(userId);
-    }else{
-      commonUtil.closeWindow();
+      this.closeDialogVisible=true;
     }
     // 初始化页面，通过路由传入的参数，填充详情页面
     this.ntcId=this.$route.params.ntcId;
@@ -101,6 +108,7 @@ export default {
   },
   data: function() {
     return {
+      closeDialogVisible:false,
       show:false,//是否显示
       cantClick:true,//是否不能点击
       acceptAgencyName: "",//执收单位名称
@@ -116,7 +124,10 @@ export default {
     };
   },
   methods: {
-
+    doClose(){
+      this.closeDialogVisible = false;
+      commonUtil.closeWindow();
+    },
     /**
      * 通用支付
      * 第一步：调用柜面支付接口，获取订单信息：记录核心日志，并加密返回前台

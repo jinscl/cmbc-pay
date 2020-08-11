@@ -1,13 +1,13 @@
 /**
  * 设置用户唯一标识cookie
  */
-function setUserCookie(userName, exdays){
+function setUserCookie(userId, exdays){
     //获取时间
     var exdate = new Date();
     //保存的天数
     exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays);
     //字符串拼接cookie
-    window.document.cookie = "userName" + "=" + userName + ";path=/;expires=" + exdate.toGMTString();
+    window.document.cookie = "USERID" + "=" + userId + ";path=/;expires=" + exdate.toGMTString();
 }
 /**
  * 设置区划cookie
@@ -30,8 +30,8 @@ function getUserCookie() {
         for (var i = 0; i < arr.length; i++) {
             var arr2 = arr[i].split('='); //再次切割
             //判断查找相对应的值
-            if (arr2[0] == 'userName') {
-                result = arr2[1]; //保存到保存数据的地方
+            if (arr2[0] == 'USERID') {
+                result = arr[i].split('USERID=')[1]; //保存到保存数据的地方
                 return result;
             }else{
                 continue;

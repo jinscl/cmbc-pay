@@ -106,7 +106,12 @@
                 if(res) {
                     // 获取通知书成功
                     if (!res.errorMsg) {
-
+                        let ntcDetails = res.data;
+                        this.acceptAgencyName = ntcDetails.acceptAgencyName;
+                        this.payer = ntcDetails.payer;
+                        this.tatefeeAmt = ntcDetails.tatefeeAmt;
+                        this.totalAmt = ntcDetails.totalAmt;
+                        this.ntcStatus = ntcDetails.ntcStatus;
                     } else {
                         this.errorMsg = res.errorMsg;
                         this.closeDialogVisible=true;
