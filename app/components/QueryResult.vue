@@ -91,6 +91,7 @@
         },
         methods:{
             doClose(){
+                this.$StoreJs.clearCookie();
                 this.closeDialogVisible = false;
                 commonUtil.closeWindow();
             },
