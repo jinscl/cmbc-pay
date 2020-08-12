@@ -29,7 +29,7 @@
                 <label class="item-name">应缴总金额</label>
                 <span class="item-value">{{totalAmt}}</span>
             </div>
-            <!-- 删除确认弹窗 -->
+            <!-- 退出确认弹窗 -->
             <el-dialog
                     title="提示"
                     :visible.sync="closeDialogVisible"

@@ -24,6 +24,16 @@
               <el-button type="primary" :disabled="isDisabled" @click="getNtcInfoFromCZ">查询</el-button>
           </el-row>
       </div>
+          <!-- 退出确认弹窗 -->
+          <el-dialog
+                  title="提示"
+                  :visible.sync="closeDialogVisible"
+                  width="30%">
+              <span>{{errorMsg}}</span>
+              <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="doClose">确 定</el-button>
+                </span>
+          </el-dialog>
       </div>
     </div>
 </template>
@@ -35,6 +45,8 @@ export default {
   name: 'SearchBill',
   data:function(){
     return {
+        closeDialogVisible:false,
+        errorMsg: "",
         ntcId:"",
         areaCode:"",
         financeData:[]
@@ -47,14 +59,20 @@ export default {
        * 不存在则关闭页面，为非法访问
        */
     let userId = this.$StoreJs.getUserCookie();
-    this.$alert("缓存的"+userId);
     if(userId && '' != userId ){
-        this.financeData = await this.$Http.getFinanceCode({}, false, {
+        let res = await this.$Http.getFinanceCode({}, false, {
             baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
         });
-        this.$StoreJs.setFinanceCookie(JSON.stringify(this.financeData));
+        if(!res.errorMsg){
+            this.financeData = res;
+            this.$StoreJs.setFinanceCookie(JSON.stringify(this.financeData));
+        }else{
+            this.closeDialogVisible = true;
+            this.errorMsg = res.errorMsg;
+        }
     }else{
-      commonUtil.closeWindow();
+        this.errorMsg = "用户信息丢失，页面即将关闭";
+        this.closeDialogVisible = true;
     }
   },
     /**
@@ -66,6 +84,10 @@ export default {
     }
   },
   methods: {
+    doClose(){
+      this.closeDialogVisible = false;
+      commonUtil.closeWindow();
+    },
     /**
      * 招商银行扫描二维码接口
      */
@@ -93,10 +115,11 @@ export default {
       let ntcId = this.ntcId;
       if( ntcId === ''){
         // ⚠️通知单格式校验 格式需要再确认
-        this.$alert('通知单号为位数字', '温馨提示', {
+        this.$alert('通知单号不能为空', '温馨提示', {
           confirmButtonText: '确定',
           center: true
         });
+        this.isDisabled = true;
       }else{
         this.isDisabled = false;
         let searchParams = {

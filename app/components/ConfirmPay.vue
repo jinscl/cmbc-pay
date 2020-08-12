@@ -32,7 +32,7 @@
       </div>
       <div>
         <form id="payForm" name="payForm" action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
-          <input type="hidden" name="jsonRequestData" v-bind:value="bankPayResJson"/>
+          <input id="jsonRequestData" type="hidden" name="jsonRequestData" v-bind:value="bankPayResJson"/>
           <input type="hidden" name="charset" value="utf-8"/>
 <!--      <input type="submit" value="提交"/>-->
         </form>
@@ -67,7 +67,6 @@ export default {
      * 从缓存中获取用户唯一标识
      */
     let userId = this.$StoreJs.getUserCookie();
-    this.$alert("缓存的"+userId);
     if(userId && '' != userId ){
       this.closeDialogVisible=false;
     }else{
@@ -83,28 +82,25 @@ export default {
     this.ntcStatus = ntcDetails.ntcStatus;
     this.penaltyAndDerateAmt = this.totalAmt-this.tatefeeAmt;
     if(this.ntcStatus){
-      if(this.ntcStatus=='' || this.ntcStatus=='02' || this.ntcStatus=='00'){
-        this.cnNtcStatus=this.ntcStatus+"待支付";
+      if(this.ntcStatus=='01'){
+        this.cnNtcStatus=this.ntcStatus+"待缴款";
         this.show=true;
-        this.cantClick = !(this.ntcStatus=='' || this.ntcStatus=='02' || this.ntcStatus=='00');
-      } else if(this.ntcStatus=='03' || this.ntcStatus=='04'){
-        this.cnNtcStatus=this.ntcStatus+"未缴款至财政，需联系行方处理";
+        this.cantClick = false;
+      } else if(this.ntcStatus=='02'){
+        this.cnNtcStatus=this.ntcStatus+"支付中";
         this.cantClick = true;
         this.show=false;
-        this.$alert("单号为:"+ this.$route.params.ntcId +"的通知书状态异常,请联系银行人员处理！");
-      }else if(this.ntcStatus=='01'){
-        this.cnNtcStatus=this.ntcStatus+"未缴款至财政，需联系行方处理";
+      }else if(this.ntcStatus=='03'){
+        this.cnNtcStatus=this.ntcStatus+"已缴款";
         this.cantClick = true;
         this.show=false;
-        this.$alert("单号为:"+ this.$route.params.ntcId +"的通知书已支付,无需再次支付,但是状态异常,请稍后再次查询,如果再次遇到本问题,请联系银行人员处理！");
       }else{
-        this.cnNtcStatus=this.ntcStatus+"已缴款至财政";
+        this.cnNtcStatus=this.ntcStatus+"04";
         this.cantClick = true;
         this.show=false;
-        this.$alert("单号为:"+ this.$route.params.ntcId +"的通知书已缴费,并与财政已确认,无需再次支付！");
       }
     }else{
-      this.cnNtcStatus="未定义,需联系行方处理";
+      this.cnNtcStatus="未定义,需联系行方";
       this.show=false;
       this.cantClick=true;
     }
@@ -166,6 +162,8 @@ export default {
           /**
            * 调用一网通支付
            */
+          var jsonRequestData = document.getElementById("jsonRequestData");
+          jsonRequestData.value = this.bankPayResJson;
           payForm.submit();
         } else {
           this.$alert(bankPayRes.errorMsg, '温馨提示error', {

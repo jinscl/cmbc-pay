@@ -50,9 +50,12 @@ export default {
      * 1.true: 直接进入查询界面
      * 2.false: 重新拉起登录
      */
-    if(userCookie && ''!=userCookie){
-      //this.$alert("缓存的"+userCookie);
-      this.$router.push("/search");
+    if(userCookie && ''!=userCookie) {
+        if (this.$route.path.indexOf("result") != -1) {
+            this.$router.push({name: 'result', params: this.$route.params});
+        } else {
+            this.$router.push("/search");
+        }
     }else {
       /**
        * 拉起登录
