@@ -22,7 +22,7 @@
           <span class="item-value">{{tatefeeAmt}}</span>
         </div>
         <div class="item-row">
-          <label class="item-name">加罚、减免共计</label>
+          <label class="item-name">加罚减免合计</label>
           <span class="item-value">{{penaltyAndDerateAmt}}</span>
         </div>
         <div class="item-row">

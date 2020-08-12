@@ -55,7 +55,7 @@
              * 不存在则关闭页面，为非法访问
              */
             let userId = this.$StoreJs.getUserCookie();
-            console.log(userId);
+            this.$alert("缓存的"+userId);
             if(userId && '' != userId ){
                 if(this.$route.params.ntcId && this.$route.params.orderNo && this.$route.params.areaCode){
                     this.ntcId = this.$route.params.ntcId;

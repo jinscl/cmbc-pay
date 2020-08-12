@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "cmblapi": "http://wxts.cmburl.cn/appdown/cmblapi.min.tar.gz",
+    "cmblapi": "http://open.cloud.cmbchina.com/api/ApiStoreInfo/DownLoadFile?itemId=9f725596-0dba-44fa-a674-c99481892030",
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
     "js-base64": "^2.5.2",

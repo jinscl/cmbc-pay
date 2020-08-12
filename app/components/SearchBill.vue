@@ -48,7 +48,6 @@ export default {
        */
     let userId = this.$StoreJs.getUserCookie();
     this.$alert("缓存的"+userId);
-    console.log(userId);
     if(userId && '' != userId ){
         this.financeData = await this.$Http.getFinanceCode({}, false, {
             baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain
