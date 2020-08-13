@@ -22,14 +22,14 @@ export default {
   name: "app",
   data: function() {
     return {
-      count : 0,
-      container:"not"
+      count : 0
     };
   },
   created() {
     if(this.checkAppletContainer()){
       this.setAppBackButton();
-      this.container = "yes";
+    }else{
+      this.setAppLeftNavigationBar();
     }
     /**
      * 注释部分为测试数据
@@ -65,11 +65,11 @@ export default {
   },
   methods: {
     /*goBack() {
-      window.history.length > 1 ? this.$router.go(-1) : this.$router.push("/");
+      window.history.length > 2 ? this.$router.go(-1) : this.$router.push("/search");
     },*/
     //检查是否小程序
     checkAppletContainer(){
-      let flag = false;
+      let flag;
       cmblapi.applet({
           api: 'checkAppletContainer',
           success: function () { //如果是小程序容器，这里回调
@@ -77,7 +77,6 @@ export default {
           },
           fail: function (res) {//如果不是小程序容器，这里回调
               flag = false;
-              console.log(res);
           }
       });
       return flag;
@@ -88,16 +87,40 @@ export default {
           api:'setAppletBackButton',
           params:{
               btnAction:'executeJs',
-              btnActionContent:'window.history.go(-1)'
+              btnActionContent:"window.history.length > 2 ? this.$router.go(-1) : this.$router.push(\"/search\");"
           },
           success:function(){
-              console.log("setAppletBackButton : success");
+              self.$alert("setAppletBackButton按钮设置成功", "温馨提示", {
+                  confirmButtonText: "确定"
+              });
           },
           fail:function(res){
-              console.log("setAppletBackButton : fail");
-              console.log(res);
+              self.$alert("setAppletBackButton按钮设置失败", "温馨提示", {
+                  confirmButtonText: "确定"
+              });
           }
-      })
+      });
+    },
+    setAppLeftNavigationBar(){
+        let self = this;
+        //设置返回按钮行为
+        cmblapi.setLeftNavigationBar({
+            btnType:'goBack',
+            btnContent:[{
+                clickAction:"executeJs",
+                clickContent:"window.history.length > 2 ? this.$router.go(-1) : this.$router.push(\"/search\");"
+            }],
+            success:function(){
+                self.$alert("setLeftNavigationBar按钮设置成功", "温馨提示", {
+                    confirmButtonText: "确定"
+                });
+            },
+            fail:function(res){
+                self.$alert("setLeftNavigationBar按钮设置失败", "温馨提示", {
+                    confirmButtonText: "确定"
+                });
+            }
+        })
     },
     /**
      * 登录校验接口
@@ -166,7 +189,7 @@ export default {
               sign: preLoginInfo.authInfo.sign
             },
             success: function(res) {
-              self.$alert("授权登录成功" + self.container, "温馨提示", {
+              self.$alert("授权登录成功", "温馨提示", {
                 confirmButtonText: "确定"
               });
               // 手机银行登录成功后，返回加密并签名的用户信息
