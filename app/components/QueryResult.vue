@@ -46,10 +46,17 @@
 <script>
     import commonApi from "../service/commonApi";
     import commonUtil from "../js/commonUtil";
+    import cmblapi from "cmblapi";
 
     export default {
         name: "QueryResult.vue",
         mounted() {
+            cmblapi.showNavigationBar({
+                success:function(){
+                },
+                fail:function(res){
+                }
+            })
             /**
              * 从cookie中获取用户唯一标识信息
              * 不存在则关闭页面，为非法访问
@@ -93,7 +100,8 @@
             doClose(){
                 this.$StoreJs.clearCookie();
                 this.closeDialogVisible = false;
-                commonUtil.closeWindow();
+                //commonUtil.closeWindow();
+                cmblapi.popWindow()
             },
             async queryData(){
                 let checkParams = {

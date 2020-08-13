@@ -147,8 +147,6 @@ export default {
         ntcId: ntcId,
         areaCode: areaCode,
         //data: this.$route.params.ntcDetails
-        totalAmt: this.$route.params.ntcDetails.totalAmt,
-        acceptAgencyCode: this.$route.params.ntcDetails.acceptAgencyCode
       }, false, {
         baseURL: commonApi.forwardUrl.protocol+commonApi.forwardUrl.ip+commonApi.forwardUrl.domain,
       });
