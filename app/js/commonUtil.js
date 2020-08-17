@@ -62,32 +62,34 @@ function shutDown() {
       console.log(e);
     }
   }
+  cmblapi.popWindow();
 }
 function closeWindow() {
+  cmblapi.popWindow();
   window.location.href="about:blank";
   window.close();
 }
 // 本接口只适用于设置App原生导航栏，不适用于设置小程序专属导航栏
 function setLeftNavigationBar(){
+  let self = this;
   cmblapi.showNavigationBar({
     success:function(){
-      this.$alert("showNavigationBar  success", '温馨提示error', {
+      self.$alert("showNavigationBar  success", '温馨提示error', {
         confirmButtonText: '确定'
       });
     },
     fail:function(res){
-      this.$alert("showNavigationBar  fail", '温馨提示error', {
+      self.$alert("showNavigationBar  fail", '温馨提示error', {
         confirmButtonText: '确定'
       });
     }
   });
-  let self = this;
   //设置返回按钮行为
   cmblapi.setLeftNavigationBar({
     btnType:'goBack',
     btnContent:[{
       clickAction:"executeJs",
-      clickContent:"window.history.length > 2 ? this.$router.go(-1) : this.$router.push(\"/search\");"
+      clickContent:"window.history.length > 2 ? window.history.go(-1) : self.$router.push(\"/search\");"
     }],
     success:function(){
       self.$alert("setLeftNavigationBar按钮设置成功", "温馨提示", {
@@ -99,7 +101,7 @@ function setLeftNavigationBar(){
         confirmButtonText: "确定"
       });
     }
-  })
+  });
 }
 //检查是否小程序
 function checkAppletContainer(){
@@ -123,12 +125,13 @@ function checkAppletContainer(){
   return flag;
 }
 function setAppletBackButton(){
+  let self = this;
   // 设置小程序页面逐级返回可以通过该接口实现:
   cmblapi.applet({
     api:'setAppletBackButton',
     params:{
       btnAction:'executeJs',
-      btnActionContent:"window.history.length > 2 ? this.$router.go(-1) : this.$router.push(\"/search\");"
+      btnActionContent:"window.history.length > 2 ? window.history.go(-1) : self.$router.push(\"/search\");"
     },
     success:function(){
       self.$alert("setAppletBackButton按钮设置成功", "温馨提示", {

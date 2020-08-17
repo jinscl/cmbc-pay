@@ -35,6 +35,7 @@
                   title="提示"
                   :visible.sync="closeDialogVisible"
                   :showClose="false"
+                  :before-close="doClose"
                   width="30%">
               <span>{{errorMsg}}</span>
               <span slot="footer" class="dialog-footer">
@@ -92,11 +93,16 @@ export default {
     }
   },
   methods: {
-    doClose(){
-      this.$StoreJs.clearCookie();
-      this.closeDialogVisible = false;
-      cmblapi.popWindow();
-      commonUtil.closeWindow();
+    doClose(done){
+      this.$confirm('确认关闭？')
+        .then(() => {
+          this.closeDialogVisible=false;
+          this.$StoreJs.clearCookie();
+          this.closeDialogVisible = false;
+          commonUtil.closeWindow();
+            done();
+        })
+        .catch(() => {});
     },
     /**
      * 招商银行扫描二维码接口

@@ -47,6 +47,7 @@
                     title="提示"
                     :visible.sync="closeDialogVisible"
                     :showClose="false"
+                    :before-close="doClose"
                     width="30%">
                 <span>{{errorMsg}}</span>
                 <span slot="footer" class="dialog-footer">
@@ -105,11 +106,17 @@
             };
         },
         methods:{
-            doClose(){
-                this.$StoreJs.clearCookie();
-                this.closeDialogVisible = false;
-                cmblapi.popWindow();
-                commonUtil.closeWindow();
+            doClose(done){
+                this.$confirm('确认关闭？')
+                    .then(() => {
+                        this.closeDialogVisible=false;
+                        this.$StoreJs.clearCookie();
+                        this.closeDialogVisible = false;
+                        cmblapi.popWindow();
+                        commonUtil.closeWindow();
+                        done();
+                    })
+                    .catch(() => {});
             },
             async queryData(){
                 let checkParams = {
