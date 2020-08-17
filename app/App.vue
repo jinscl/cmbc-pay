@@ -26,11 +26,7 @@ export default {
     };
   },
   created() {
-    if(this.checkAppletContainer()){
-      this.setAppBackButton();
-    }else{
-      this.setAppLeftNavigationBar();
-    }
+    commonUtil.showTopBar();
     /**
      * 注释部分为测试数据
      * 在这里用一个空的 logintest = {}，最开始是为了生命周期，以及后台使用session而使用，后来发现session在app上无法使用，此时没有什么作用，可以删掉
@@ -67,61 +63,6 @@ export default {
     /*goBack() {
       window.history.length > 2 ? this.$router.go(-1) : this.$router.push("/search");
     },*/
-    //检查是否小程序
-    checkAppletContainer(){
-      let flag;
-      cmblapi.applet({
-          api: 'checkAppletContainer',
-          success: function () { //如果是小程序容器，这里回调
-              flag = true;
-          },
-          fail: function (res) {//如果不是小程序容器，这里回调
-              flag = false;
-          }
-      });
-      return flag;
-    },
-    setAppBackButton(){
-      // 设置小程序页面逐级返回可以通过该接口实现:
-      cmblapi.applet({
-          api:'setAppletBackButton',
-          params:{
-              btnAction:'executeJs',
-              btnActionContent:"window.history.length > 2 ? this.$router.go(-1) : this.$router.push(\"/search\");"
-          },
-          success:function(){
-              self.$alert("setAppletBackButton按钮设置成功", "温馨提示", {
-                  confirmButtonText: "确定"
-              });
-          },
-          fail:function(res){
-              self.$alert("setAppletBackButton按钮设置失败", "温馨提示", {
-                  confirmButtonText: "确定"
-              });
-          }
-      });
-    },
-    setAppLeftNavigationBar(){
-        let self = this;
-        //设置返回按钮行为
-        cmblapi.setLeftNavigationBar({
-            btnType:'goBack',
-            btnContent:[{
-                clickAction:"executeJs",
-                clickContent:"window.history.length > 2 ? this.$router.go(-1) : this.$router.push(\"/search\");"
-            }],
-            success:function(){
-                self.$alert("setLeftNavigationBar按钮设置成功", "温馨提示", {
-                    confirmButtonText: "确定"
-                });
-            },
-            fail:function(res){
-                self.$alert("setLeftNavigationBar按钮设置失败", "温馨提示", {
-                    confirmButtonText: "确定"
-                });
-            }
-        })
-    },
     /**
      * 登录校验接口
      * @param loginData 不存在：查询登录信息，因session技术无法使用，现废弃；
@@ -189,9 +130,6 @@ export default {
               sign: preLoginInfo.authInfo.sign
             },
             success: function(res) {
-              self.$alert("授权登录成功", "温馨提示", {
-                confirmButtonText: "确定"
-              });
               // 手机银行登录成功后，返回加密并签名的用户信息
               if (res.resultType === "Y") {
                 //将小程序登录信息发送至柜面校验、保存等

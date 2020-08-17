@@ -45,6 +45,7 @@
       <el-dialog
               title="提示"
               :visible.sync="closeDialogVisible"
+              :showClose="false"
               width="30%">
         <span>用户信息丢失,页面即将关闭</span>
         <span slot="footer" class="dialog-footer">
@@ -56,6 +57,7 @@
 <script>
 import commonUtil from "../js/commonUtil";
 import commonApi from '../service/commonApi'
+import cmblapi from "cmblapi";
 
 export default {
   name: "ConfirmPay",
@@ -63,6 +65,7 @@ export default {
     msg: String
   },
   mounted() {
+    commonUtil.showTopBar();
     /**
      * 从缓存中获取用户唯一标识
      */
@@ -95,7 +98,7 @@ export default {
         this.cantClick = true;
         this.show=false;
       }else{
-        this.cnNtcStatus=this.ntcStatus+"04";
+        this.cnNtcStatus=this.ntcStatus+"已废止";
         this.cantClick = true;
         this.show=false;
       }
@@ -126,6 +129,7 @@ export default {
     doClose(){
       this.$StoreJs.clearCookie();
       this.closeDialogVisible = false;
+      cmblapi.popWindow();
       commonUtil.closeWindow();
     },
     /**

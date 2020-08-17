@@ -5,6 +5,7 @@
                 <label class="item-name">通知书单号</label>
                 <span class="item-value">{{ntcId}}</span>
             </div>
+            <div v-if="acceptAgencyName">
             <div class="item-row">
                 <label class="item-name">执收单位名称</label>
                 <span class="item-value">{{acceptAgencyName}}</span>
@@ -22,17 +23,30 @@
                 <span class="item-value">{{tatefeeAmt}}</span>
             </div>
             <div class="item-row">
-                <label class="item-name">加罚和减免共计</label>
+                <label class="item-name">加罚减免共计</label>
                 <span class="item-value">{{penaltyAndDerateAmt}}</span>
             </div>
             <div class="item-row">
                 <label class="item-name">应缴总金额</label>
                 <span class="item-value">{{totalAmt}}</span>
             </div>
+            </div>
+            <div v-else>
+                <div class="item-row">
+                    <label class="item-name">财政响应码</label>
+                    <span class="item-value">{{resultCode}}</span>
+                </div>
+                <div class="item-row">
+                    <label class="item-name">财政响应描述</label>
+                    <span class="item-value">{{resultMessage}}</span>
+                </div>
+            </div>
             <!-- 退出确认弹窗 -->
+            <!-- showClose主要是这个属性设为false即可 -->
             <el-dialog
                     title="提示"
                     :visible.sync="closeDialogVisible"
+                    :showClose="false"
                     width="30%">
                 <span>{{errorMsg}}</span>
                 <span slot="footer" class="dialog-footer">
@@ -51,26 +65,18 @@
     export default {
         name: "QueryResult.vue",
         mounted() {
-            cmblapi.showNavigationBar({
-                success:function(){
-                },
-                fail:function(res){
-                }
-            })
+            commonUtil.showTopBar();
             /**
              * 从cookie中获取用户唯一标识信息
              * 不存在则关闭页面，为非法访问
              */
             let userId = this.$StoreJs.getUserCookie();
-            this.$alert("缓存的"+userId);
             if(userId && '' != userId ){
                 if(this.$route.params.ntcId && this.$route.params.orderNo && this.$route.params.areaCode){
                     this.ntcId = this.$route.params.ntcId;
                     this.orderNo = this.$route.params.orderNo;
                     this.areaCode = this.$route.params.areaCode;
-                    setTimeout(()=>{
-                        this.queryData();
-                        },10);
+                    this.queryData();
                 }else{
                     this.errorMsg = "链接传递参数有误,界面即将关闭";
                     this.closeDialogVisible = true;
@@ -94,14 +100,16 @@
                 ntcStatus: "",//通知书状态
                 penaltyAndDerateAmt: "",//加罚+减免
                 cnNtcStatus:"",//中文状态
+                resultMessage:"",//财政相应描述
+                resultCode:""//财政响应码
             };
         },
         methods:{
             doClose(){
                 this.$StoreJs.clearCookie();
                 this.closeDialogVisible = false;
-                //commonUtil.closeWindow();
-                cmblapi.popWindow()
+                cmblapi.popWindow();
+                commonUtil.closeWindow();
             },
             async queryData(){
                 let checkParams = {
@@ -120,8 +128,21 @@
                         this.payer = ntcDetails.payer;
                         this.tatefeeAmt = ntcDetails.tatefeeAmt;
                         this.totalAmt = ntcDetails.totalAmt;
+                        this.penaltyAndDerateAmt = this.totalAmt-this.tatefeeAmt;
                         this.ntcStatus = ntcDetails.ntcStatus;
-                    } else {
+                        if(this.ntcStatus=='01'){
+                            this.cnNtcStatus=this.ntcStatus+"待缴款";
+                        } else if(this.ntcStatus=='02'){
+                            this.cnNtcStatus=this.ntcStatus+"支付中";
+                        }else if(this.ntcStatus=='03'){
+                            this.cnNtcStatus=this.ntcStatus+"已缴款";
+                        }else{
+                            this.cnNtcStatus=this.ntcStatus+"已废止";
+                        }
+                    } else if(res.resultCode){
+                        this.resultCode = res.resultCode;
+                        this.resultMessage = res.resultMessage;
+                    }else{
                         this.errorMsg = res.errorMsg;
                         this.closeDialogVisible=true;
                     }

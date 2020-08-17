@@ -24,10 +24,17 @@
               <el-button type="primary" :disabled="isDisabled" @click="getNtcInfoFromCZ">查询</el-button>
           </el-row>
       </div>
+      <!-- 测试使用 -->
+      <div class="button-row">
+          <el-row>
+              <el-button type="primary"  @click="goToResult">result</el-button>
+          </el-row>
+      </div>
           <!-- 退出确认弹窗 -->
           <el-dialog
                   title="提示"
                   :visible.sync="closeDialogVisible"
+                  :showClose="false"
                   width="30%">
               <span>{{errorMsg}}</span>
               <span slot="footer" class="dialog-footer">
@@ -53,6 +60,7 @@ export default {
     }
   },
   async mounted() {
+      commonUtil.showTopBar();
       /**
        * 从cookie中获取用户唯一标识、区划等信息
        * 如果用户唯一标识存在则验证区划
@@ -87,6 +95,7 @@ export default {
     doClose(){
       this.$StoreJs.clearCookie();
       this.closeDialogVisible = false;
+      cmblapi.popWindow();
       commonUtil.closeWindow();
     },
     /**
@@ -105,6 +114,10 @@ export default {
         }
       })
 
+    },
+    // 测试使用
+    goToResult(){
+        this.$router.push({name: 'result', params: {ntcId: "44030120000003613843",areaCode:"440301",orderNo:"440301"}});
     },
     /**
      * 从后台查询通知单详情
