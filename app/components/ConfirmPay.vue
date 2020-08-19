@@ -1,59 +1,59 @@
 <template>
-    <div class="content">
-      <div class="wrapper">
-        <div class="item-row">
-          <label class="item-name">通知书单号</label>
-          <span class="item-value">{{ntcId}}</span>
-        </div>
-        <div class="item-row">
-          <label class="item-name">执收单位名称</label>
-          <span class="item-value">{{acceptAgencyName}}</span>
-        </div>
-        <div class="item-row">
-          <label class="item-name">缴款人</label>
-          <span class="item-value">{{payer}}</span>
-        </div>
-        <div class="item-row">
-          <label class="item-name">通知书状态</label>
-          <span class="item-value">{{cnNtcStatus}}</span>
-        </div>
-        <div class="item-row">
-          <label class="item-name">总滞纳金</label>
-          <span class="item-value">{{tatefeeAmt}}</span>
-        </div>
-        <div class="item-row">
-          <label class="item-name">加罚减免合计</label>
-          <span class="item-value">{{penaltyAndDerateAmt}}</span>
-        </div>
-        <div class="item-row">
-          <label class="item-name">应缴总金额</label>
-          <span class="item-value">{{totalAmt}}</span>
-        </div>
+  <div class="content">
+    <div class="wrapper">
+      <div class="item-row">
+        <label class="item-name">通知书单号</label>
+        <span class="item-value">{{ntcId}}</span>
       </div>
-      <div>
-        <form id="payForm" name="payForm" action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
-          <input id="jsonRequestData" type="hidden" name="jsonRequestData" v-bind:value="bankPayResJson"/>
-          <input type="hidden" name="charset" value="utf-8"/>
-<!--      <input type="submit" value="提交"/>-->
-        </form>
-        <div class="button-row">
-          <el-row>
-            <el-button type="primary" :disabled="cantClick" v-show="show" @click="confirmPay">确认支付</el-button>
-          </el-row>
-        </div>
+      <div class="item-row">
+        <label class="item-name">执收单位名称</label>
+        <span class="item-value">{{acceptAgencyName}}</span>
       </div>
-      <el-dialog
-              title="提示"
-              :visible.sync="closeDialogVisible"
-              :showClose="false"
-              :before-close="doClose"
-              width="calc(100% - 30px)">
-        <span>用户信息丢失,页面即将关闭</span>
-        <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="doClose">确 定</el-button>
-                </span>
-      </el-dialog>
+      <div class="item-row">
+        <label class="item-name">缴款人</label>
+        <span class="item-value">{{payer}}</span>
+      </div>
+      <div class="item-row">
+        <label class="item-name">通知书状态</label>
+        <span class="item-value">{{cnNtcStatus}}</span>
+      </div>
+      <div class="item-row">
+        <label class="item-name">总滞纳金</label>
+        <span class="item-value">{{tatefeeAmt}}</span>
+      </div>
+      <div class="item-row">
+        <label class="item-name">加罚减免合计</label>
+        <span class="item-value">{{penaltyAndDerateAmt}}</span>
+      </div>
+      <div class="item-row">
+        <label class="item-name">应缴总金额</label>
+        <span class="item-value">{{totalAmt}}</span>
+      </div>
     </div>
+    <div>
+      <form id="payForm" name="payForm" action="http://121.15.180.66:801/netpayment/BaseHttp.dll?MB_APPPay" method="post">
+        <input id="jsonRequestData" type="hidden" name="jsonRequestData" v-bind:value="bankPayResJson"/>
+        <input type="hidden" name="charset" value="utf-8"/>
+        <!--<input type="submit" value="提交"/>-->
+      </form>
+      <div class="button-row">
+        <el-row>
+          <el-button type="primary" :disabled="cantClick" v-show="show" @click="confirmPay">确认支付</el-button>
+        </el-row>
+      </div>
+    </div>
+    <el-dialog
+            title="提示"
+            :visible.sync="closeDialogVisible"
+            :showClose="false"
+            :before-close="doClose"
+            width="calc(100% - 30px)">
+      <span>用户信息丢失,页面即将关闭</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="doClose">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 <script>
 import commonUtil from "../js/commonUtil";

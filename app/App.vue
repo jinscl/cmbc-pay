@@ -1,15 +1,14 @@
 <template>
   <div id="app">
-      <!--  取消topbar-->
-      <!--<header class="header">
-        <div class="header-icon" @click="goBack">
-          <i class="el-icon-arrow-left"></i>
-        </div>
-        <div class="header-title">
-          <span>通知单缴费</span>
-        </div>
-      </header>-->
-
+    <!--  取消topbar-->
+    <!--<header class="header">
+      <div class="header-icon" @click="goBack">
+        <i class="el-icon-arrow-left"></i>
+      </div>
+      <div class="header-title">
+        <span>通知单缴费</span>
+      </div>
+    </header>-->
     <router-view></router-view>
       招商银行深圳分行非税业务<br/>
       版权所有：北京用友政务软件股份有限公司 ©
@@ -50,11 +49,11 @@ export default {
      * 2.false: 重新拉起登录
      */
     if(userCookie && ''!=userCookie) {
-        if (this.$route.path.indexOf("result") != -1) {
-            this.$router.push({name: 'result', params: this.$route.params});
-        } else {
-            this.$router.push("/search");
-        }
+      if (this.$route.path.indexOf("result") != -1) {
+        this.$router.push({name: 'result', params: this.$route.params});
+      } else {
+        this.$router.push("/search");
+      }
     }else {
       /**
        * 拉起登录

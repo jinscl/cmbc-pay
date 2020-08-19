@@ -24,24 +24,18 @@
               <el-button type="primary" :disabled="isDisabled" @click="getNtcInfoFromCZ">查询</el-button>
           </el-row>
       </div>
-      <!-- 测试使用 -->
-      <div class="button-row">
-          <el-row>
-              <el-button type="primary"  @click="goToResult">result</el-button>
-          </el-row>
-      </div>
-          <!-- 退出确认弹窗 -->
-          <el-dialog
-                  title="提示"
-                  :visible.sync="closeDialogVisible"
-                  :showClose="false"
-                  :before-close="doClose"
-                  width="calc(100% - 30px)">
-              <span>{{errorMsg}}</span>
-              <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="doClose">确 定</el-button>
-                </span>
-          </el-dialog>
+      <!-- 退出确认弹窗 -->
+        <el-dialog
+              title="提示"
+              :visible.sync="closeDialogVisible"
+              :showClose="false"
+              :before-close="doClose"
+              width="calc(100% - 30px)">
+          <span>{{errorMsg}}</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="doClose">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
 </template>
