@@ -42,7 +42,7 @@ const COMMON_API = {
     // 请求路径拼接，为了避免被扫描出路径不安全
     forwardUrl:{
         protocol:'http://',
-        ip:'szfs-bankend2.bcs.cmburl',
+        ip:'ydckgj-xs-dev.bcs.cmburl',
         domain:'.cn',
     }
 }

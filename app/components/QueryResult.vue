@@ -48,7 +48,7 @@
                     :visible.sync="closeDialogVisible"
                     :showClose="false"
                     :before-close="doClose"
-                    width="30%">
+                    width="calc(100% - 30px)">
                 <span>{{errorMsg}}</span>
                 <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="doClose">确 定</el-button>
@@ -107,8 +107,12 @@
         },
         methods:{
             doClose(done){
-                this.$confirm('确认关闭？')
-                    .then(() => {
+                this.$confirm('确认关闭？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
                         this.closeDialogVisible=false;
                         this.$StoreJs.clearCookie();
                         this.closeDialogVisible = false;

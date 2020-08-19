@@ -9,7 +9,10 @@
           <span>通知单缴费</span>
         </div>
       </header>-->
+
     <router-view></router-view>
+      招商银行深圳分行非税业务<br/>
+      版权所有：北京用友政务软件股份有限公司 ©
   </div>
 </template>
 
@@ -214,10 +217,6 @@ body {
 }
 .el-button {
   background-image: linear-gradient(to bottom right, #54b8f4, #5c78eb);
-}
-.el-row,
-.el-button {
-  width: 100%;
 }
 
 .el-message-box {

@@ -36,7 +36,7 @@
                   :visible.sync="closeDialogVisible"
                   :showClose="false"
                   :before-close="doClose"
-                  width="30%">
+                  width="calc(100% - 30px)">
               <span>{{errorMsg}}</span>
               <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="doClose">确 定</el-button>
@@ -94,13 +94,20 @@ export default {
   },
   methods: {
     doClose(done){
-      this.$confirm('确认关闭？')
-        .then(() => {
-          this.closeDialogVisible=false;
-          this.$StoreJs.clearCookie();
-          this.closeDialogVisible = false;
-          commonUtil.closeWindow();
-            done();
+      this.$confirm('确认关闭？', '提示', {
+          /*cancelButtonClass: 'btn-custom-cancel',
+          confirmButtonClass: 'btn-custom-confirm',*/
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true,
+      }).then(() => {
+           this.closeDialogVisible=false;
+           this.$StoreJs.clearCookie();
+           this.closeDialogVisible = false;
+           cmblapi.popWindow();
+           commonUtil.closeWindow();
+           done();
         })
         .catch(() => {});
     },
@@ -191,6 +198,18 @@ export default {
     }
     .item-input:focus{
       outline:transparent;
+    }
+    /*.btn-custom-cancel{
+        height: 10px;
+        width: 10px;
+    }
+    .btn-custom-confirm{
+      height: 10px;
+      width: 10px;
+    }*/
+    .el-row,
+    .el-button {
+        width: 100%;
     }
 </style>
 

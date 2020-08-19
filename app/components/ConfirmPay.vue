@@ -47,7 +47,7 @@
               :visible.sync="closeDialogVisible"
               :showClose="false"
               :before-close="doClose"
-              width="30%">
+              width="calc(100% - 30px)">
         <span>用户信息丢失,页面即将关闭</span>
         <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="doClose">确 定</el-button>
@@ -128,8 +128,12 @@ export default {
   },
   methods: {
     doClose(done){
-      this.$confirm('确认关闭？')
-        .then(() => {
+      this.$confirm('确认关闭？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
           this.closeDialogVisible=false;
           this.$StoreJs.clearCookie();
           this.closeDialogVisible = false;
@@ -195,7 +199,10 @@ export default {
   background-color: #fff;
   border-top: 1px solid #eeeeee;
 }
-
+.el-row,
+.el-button {
+  width: 100%;
+}
 </style>
 
 
