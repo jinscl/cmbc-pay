@@ -28,7 +28,7 @@ export default {
     };
   },
   created() {
-    commonUtil.showTopBar();
+    commonUtil.showTopBar(this);
     /**
      * 注释部分为测试数据
      * 在这里用一个空的 logintest = {}，最开始是为了生命周期，以及后台使用session而使用，后来发现session在app上无法使用，此时没有什么作用，可以删掉
@@ -80,7 +80,7 @@ export default {
       if (res) {
         if(res.errorMsg){
           if(this.count >= 2){
-            commonUtil.shutDown();
+            commonUtil.shutDown(this);
           }else {
             // 失败则再次拉起登录
             this.login();
@@ -98,7 +98,7 @@ export default {
           });
         }
         this.count=0;
-        commonUtil.shutDown();
+        commonUtil.shutDown(this);
       }
     },
     /**
@@ -137,11 +137,11 @@ export default {
                 //将小程序登录信息发送至柜面校验、保存等
                 self.validateLogin(res);
               } else {
-                this.$alert("登录授权失败，resultType=N，请稍后重试！", "温馨提示", {
+                self.$alert("登录授权失败，resultType=N，请稍后重试！", "温馨提示", {
                   confirmButtonText: "确定"
                 });
                 // 关闭页面
-                commonUtil.shutDown();
+                commonUtil.shutDown(this);
               }
             },
             fail: function(res) {
@@ -149,11 +149,11 @@ export default {
                 confirmButtonText: "确定"
               });
               // 关闭页面
-              commonUtil.shutDown();
+              commonUtil.shutDown(this);
             }
           });
         } else {
-         commonUtil.shutDown();
+         commonUtil.shutDown(this);
         }
       }
     },

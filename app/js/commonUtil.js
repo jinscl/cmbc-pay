@@ -32,7 +32,7 @@ function randomString(len) {
   }
   return str;
 }
-function shutDown() {
+function shutDown(_this) {
   var browserName = navigator.appName;
   if(browserName == "Microsoft Internet Explorer"){
     var ie7 = (document.all && !window.opera && window.XMLHttpRequest) ? true : false;
@@ -42,15 +42,15 @@ function shutDown() {
       window.close();
     } else {
       //This method is required to close a window without any prompt for IE6
-      this.focus();
-      self.opener = this;
+      _this.focus();
+      self.opener = _this;
       self.close();
     }
   }else{
     //For NON-IE Browsers except Firefox which doesnt support Auto Close
     try{
-      this.focus();
-      self.opener = this;
+      _this.focus();
+      self.opener = _this;
       self.close();
     } catch(e){
       console.log(e);
@@ -62,6 +62,7 @@ function shutDown() {
       console.log(e);
     }
   }
+  _this.$StoreJs.clearCookie();
   cmblapi.popWindow();
 }
 function closeWindow() {
@@ -70,94 +71,81 @@ function closeWindow() {
   window.close();
 }
 // 本接口只适用于设置App原生导航栏，不适用于设置小程序专属导航栏
-function setLeftNavigationBar(){
-  let self = this;
+function setLeftNavigationBar(self,action){
   cmblapi.showNavigationBar({
     success:function(){
-      self.$alert("showNavigationBar  success", '温馨提示error', {
+      /*self.$alert("showNavigationBar  success", '温馨提示error', {
         confirmButtonText: '确定'
-      });
+      });*/
     },
     fail:function(res){
-      self.$alert("showNavigationBar  fail", '温馨提示error', {
+      /*self.$alert("showNavigationBar  fail", '温馨提示error', {
         confirmButtonText: '确定'
-      });
+      });*/
     }
   });
   //设置返回按钮行为
   cmblapi.setLeftNavigationBar({
     btnType:'goBack',
     btnContent:[{
-      clickAction:"executeJs",
-      clickContent:"window.history.length > 2 ? window.history.go(-1) : self.$router.push(\"/search\");"
+      clickAction:action,
+      clickContent:"window.history.length > 2 ? window.history.go(-1) : cmblapi.popWindow();"
     }],
     success:function(){
-      self.$alert("setLeftNavigationBar按钮设置成功", "温馨提示", {
+      /*self.$alert("setLeftNavigationBar按钮设置成功", "温馨提示", {
         confirmButtonText: "确定"
-      });
+      });*/
     },
     fail:function(res){
-      self.$alert("setLeftNavigationBar按钮设置失败"+res, "温馨提示", {
+      /*self.$alert("setLeftNavigationBar按钮设置失败"+res, "温馨提示", {
         confirmButtonText: "确定"
-      });
+      });*/
     }
   });
 }
-//检查是否小程序
-function checkAppletContainer(){
-  let flag;
-  let self = this;
-  cmblapi.applet({
+function showTopBar(self,action){
+    //检查是否小程序
+    cmblapi.applet({
     api: 'checkAppletContainer',
     success: function () { //如果是小程序容器，这里回调
-      flag = true;
-      self.$alert("小程序容器", "温馨提示", {
+      /*self.$alert("小程序容器", "温馨提示", {
         confirmButtonText: "确定"
-      });
+      });*/
+      setAppletBackButton(self,action);
     },
     fail: function (res) {//如果不是小程序容器，这里回调
-      flag = false;
-      self.$alert("不是小程序容器"+res, "温馨提示", {
+      /*self.$alert("不是小程序容器"+res, "温馨提示", {
         confirmButtonText: "确定"
-      });
+      });*/
+      setLeftNavigationBar(self,action);
     }
   });
-  return flag;
 }
-function setAppletBackButton(){
-  let self = this;
+function setAppletBackButton(self,action){
   // 设置小程序页面逐级返回可以通过该接口实现:
   cmblapi.applet({
     api:'setAppletBackButton',
     params:{
-      btnAction:'executeJs',
-      btnActionContent:"window.history.length > 2 ? window.history.go(-1) : self.$router.push(\"/search\");"
+      btnAction:action,
+      btnActionContent:"window.history.length > 2 ? window.history.go(-1) : cmblapi.popWindow();"
     },
     success:function(){
-      self.$alert("setAppletBackButton按钮设置成功", "温馨提示", {
+      /*self.$alert("setAppletBackButton按钮设置成功", "温馨提示", {
         confirmButtonText: "确定"
-      });
+      });*/
     },
     fail:function(res){
-      self.$alert("setAppletBackButton按钮设置失败"+res, "温馨提示", {
+      /*self.$alert("setAppletBackButton按钮设置失败"+res, "温馨提示", {
         confirmButtonText: "确定"
-      });
+      });*/
     }
   });
-}
-function showTopBar(){
-  if(checkAppletContainer()){
-    setAppletBackButton();
-  }else{
-    setLeftNavigationBar();
-  }
 }
 export default {
   formateDateAndTimeToString,
   randomString,
   setLeftNavigationBar,
-  checkAppletContainer,
-  setAppletBackButton,
+    setAppletBackButton,
   shutDown,
   closeWindow,
   showTopBar

@@ -55,7 +55,7 @@ export default {
     }
   },
   async mounted() {
-      commonUtil.showTopBar();
+      commonUtil.showTopBar(this,"default");
       /**
        * 从cookie中获取用户唯一标识、区划等信息
        * 如果用户唯一标识存在则验证区划

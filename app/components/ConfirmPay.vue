@@ -66,7 +66,7 @@ export default {
     msg: String
   },
   mounted() {
-    commonUtil.showTopBar();
+    commonUtil.showTopBar(this,"executeJs");
     /**
      * 从缓存中获取用户唯一标识
      */
