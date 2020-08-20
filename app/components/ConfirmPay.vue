@@ -21,10 +21,10 @@
         <label class="item-name">总滞纳金</label>
         <span class="item-value">{{tatefeeAmt}}</span>
       </div>
-      <div class="item-row">
+      <!--<div class="item-row">
         <label class="item-name">加罚减免合计</label>
         <span class="item-value">{{penaltyAndDerateAmt}}</span>
-      </div>
+      </div>-->
       <div class="item-row">
         <label class="item-name">应缴总金额</label>
         <span class="item-value">{{totalAmt}}</span>
