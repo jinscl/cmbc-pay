@@ -180,9 +180,15 @@ export default {
           jsonRequestData.value = this.bankPayResJson;
           payForm.submit();
         } else {
-          this.$alert(bankPayRes.errorMsg, '温馨提示error', {
-            confirmButtonText: '确定'
-          });
+          if(bankPayRes.errorMsg.indexOf("登录")>0){
+            this.errorMsg = bankPayRes.errorMsg;
+            this.closeDialogVisible = true;
+          }else {
+            this.$alert(bankPayRes.errorMsg, '温馨提示', {
+              confirmButtonText: '确定',
+              center: true
+            })
+          }
         }
       }
     }
