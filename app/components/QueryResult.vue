@@ -130,14 +130,12 @@
                     type: 'warning',
                     center: true
                 }).then(() => {
-                        this.closeDialogVisible=false;
-                        this.$StoreJs.clearCookie();
-                        this.closeDialogVisible = false;
-                        cmblapi.popWindow();
-                        commonUtil.closeWindow();
-                        done();
-                    })
-                    .catch(() => {});
+                    this.$StoreJs.clearCookie();
+                    this.closeDialogVisible = false;
+                    commonUtil.shutDown(this);
+                    cmblapi.popWindow();
+                    done();
+                }).catch(() => {});
             },
             async queryData(){
                 let checkParams = {

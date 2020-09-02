@@ -134,14 +134,12 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-          this.closeDialogVisible=false;
-          this.$StoreJs.clearCookie();
-          this.closeDialogVisible = false;
-          cmblapi.popWindow();
-          commonUtil.closeWindow();
-          done();
-        })
-        .catch(() => {});
+        this.$StoreJs.clearCookie();
+        this.closeDialogVisible = false;
+        commonUtil.shutDown(this);
+        cmblapi.popWindow();
+        done();
+      }).catch(() => {});
     },
     /**
      * 通用支付

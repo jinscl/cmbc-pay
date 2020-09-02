@@ -96,14 +96,12 @@ export default {
           type: 'warning',
           center: true,
       }).then(() => {
-           this.closeDialogVisible=false;
            this.$StoreJs.clearCookie();
            this.closeDialogVisible = false;
+           commonUtil.shutDown(this);
            cmblapi.popWindow();
-           commonUtil.closeWindow();
            done();
-        })
-        .catch(() => {});
+      }).catch(() => {});
     },
     /**
      * 招商银行扫描二维码接口

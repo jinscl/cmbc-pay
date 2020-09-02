@@ -9,6 +9,17 @@
         <span>通知单缴费</span>
       </div>
     </header>-->
+    <el-dialog
+      title="提示"
+      :visible.sync="closeDialogVisible"
+      :showClose="false"
+      :before-close="doClose"
+      width="calc(100% - 30px)">
+      <span>{{errorMsg}}</span>
+      <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="doClose">确 定</el-button>
+                </span>
+    </el-dialog>
     <router-view></router-view>
       招商银行深圳分行非税业务<br/>
       版权所有：北京用友政务软件股份有限公司 ©
@@ -24,7 +35,9 @@ export default {
   name: "app",
   data: function() {
     return {
-      count : 0
+      count : 0,
+      closeDialogVisible : false,
+      errorMsg : ""
     };
   },
   created() {
@@ -65,6 +78,20 @@ export default {
     /*goBack() {
       window.history.length > 2 ? this.$router.go(-1) : this.$router.push("/search");
     },*/
+    doClose(done){
+      this.$confirm('确认关闭？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }).then(() => {
+        this.$StoreJs.clearCookie();
+        this.closeDialogVisible = false;
+        commonUtil.shutDown(this);
+        cmblapi.popWindow();
+        done();
+      }).catch(() => {});
+    },
     /**
      * 登录校验接口
      * @param loginData 不存在：查询登录信息，因session技术无法使用，现废弃；
@@ -80,7 +107,8 @@ export default {
       if (res) {
         if(res.errorMsg){
           if(this.count >= 2){
-            commonUtil.shutDown(this);
+            this.errorMsg = "登录授权失败，请稍后重试！";
+            this.closeDialogVisible = true;
           }else {
             // 失败则再次拉起登录
             this.login();
@@ -93,12 +121,10 @@ export default {
         }
       } else {
         if(this.count >= 2) {
-          this.$alert("校验登录失败！", "温馨提示", {
-            confirmButtonText: "确定"
-          });
+          this.errorMsg = "校验登录失败！，请稍后重试！";
+          this.closeDialogVisible = true;
         }
         this.count=0;
-        commonUtil.shutDown(this);
       }
     },
     /**
@@ -137,23 +163,18 @@ export default {
                 //将小程序登录信息发送至柜面校验、保存等
                 self.validateLogin(res);
               } else {
-                self.$alert("登录授权失败，resultType=N，请稍后重试！", "温馨提示", {
-                  confirmButtonText: "确定"
-                });
-                // 关闭页面
-                commonUtil.shutDown(this);
+                this.errorMsg = "登录授权失败，resultType=N，请稍后重试！";
+                this.closeDialogVisible = true;
               }
             },
             fail: function(res) {
-              self.$alert("App登录失败回调,"+res.errCode + ":" + res.errMsg, "温馨提示", {
-                confirmButtonText: "确定"
-              });
-              // 关闭页面
-              commonUtil.shutDown(this);
+              this.errorMsg = "App登录失败回调,"+res.errCode + ":" + res.errMsg;
+              this.closeDialogVisible = true;
             }
           });
         } else {
-         commonUtil.shutDown(this);
+          this.errorMsg = preLoginInfo.errorMsg;
+          this.closeDialogVisible = true;
         }
       }
     },
