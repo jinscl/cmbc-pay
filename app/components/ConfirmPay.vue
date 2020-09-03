@@ -185,7 +185,7 @@ export default {
             this.$alert(bankPayRes.errorMsg, '温馨提示', {
               confirmButtonText: '确定',
               center: true
-            })
+            });
           }
         }
       }

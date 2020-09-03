@@ -154,14 +154,14 @@ export default {
             this.isDisabled = true;
             this.$router.push({name: 'pay', params: {ntcId: ntcId,areaCode:this.areaCode,ntcDetails:res.data}});
           }else{
-            if(res.errorMsg.indexOf("登录")>0){
+            if(res.errorMsg.indexOf("登录")>-1){
               this.errorMsg = res.errorMsg;
               this.closeDialogVisible = true;
             }else {
               this.$alert(res.errorMsg, '温馨提示', {
                 confirmButtonText: '确定',
                 center: true
-              })
+              });
             }
           }
         }

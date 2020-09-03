@@ -74,6 +74,11 @@ export default {
       this.login();
     }
   },
+  destroyed() {
+    this.$StoreJs.clearCookie();
+    commonUtil.shutDown(this);
+    cmblapi.popWindow();
+  },
   methods: {
     /*goBack() {
       window.history.length > 2 ? this.$router.go(-1) : this.$router.push("/search");
@@ -163,12 +168,12 @@ export default {
                 //将小程序登录信息发送至柜面校验、保存等
                 self.validateLogin(res);
               } else {
-                this.errorMsg = "登录授权失败，resultType=N，请稍后重试！";
+                this.errorMsg = "登录授权失败，请稍后重试！";
                 this.closeDialogVisible = true;
               }
             },
             fail: function(res) {
-              this.errorMsg = "App登录失败回调,"+res.errCode + ":" + res.errMsg;
+              this.errorMsg = "授权登录失败,"+res.errCode + ":" + res.errMsg;
               this.closeDialogVisible = true;
             }
           });

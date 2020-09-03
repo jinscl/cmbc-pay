@@ -41,15 +41,14 @@
                     <span class="item-value">{{resultMessage}}</span>
                 </div>
             </div>
-            <div v-else>
-                <div>
-                    数据处理中，请稍等。。。
-                </div>
-            </div>
             <div class="button-row">
                 <el-row>
                     <el-button type="primary"  @click="goToSearch">进入查询页面</el-button>
                 </el-row>
+            </div>
+            <div v-if="!resultCode&&errorMsg" style="width: 200px;position:fixed;left: 100px;top: 120px">
+                    <div style="color: red">错误信息:</div>
+                    <span class="item-error">{{errorMsg}}</span>
             </div>
             <!-- 退出确认弹窗 -->
             <!-- showClose主要是这个属性设为false即可 -->
@@ -178,8 +177,19 @@
                                 this.resultCode = res.resultCode;
                                 this.resultMessage = res.resultMessage;
                             } else {
-                                this.errorMsg = res.errorMsg;
-                                this.closeDialogVisible = true;
+                                if(res.errorMsg.indexOf("登录")>-1){
+                                  this.errorMsg = res.errorMsg;
+                                  this.closeDialogVisible = true;
+                                  this.loading = false;
+                                  break;
+                                }else {
+                                  this.errorMsg = res.errorMsg;
+                                  this.$alert(res.errorMsg, '温馨提示', {
+                                    confirmButtonText: '确定',
+                                    center: true
+                                  });
+                                  break;
+                                }
                             }
                         }
                     }
@@ -227,5 +237,15 @@
     .el-row,
     .el-button {
         width: 100%;
+    }
+    .item-error{
+      white-space: pre-wrap;
+      flex: 2;
+      text-align: center;
+      font-size: 16px;
+      border-style:ridge;
+      border-radius: 0px;
+      border-width:1px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     }
 </style>
