@@ -18,7 +18,7 @@
                 <label class="item-name">通知书状态</label>
                 <span class="item-value">{{cnNtcStatus}}</span>
             </div>
-            <div class="item-row">
+            <div v-if="tatefeeAmt&&tatefeeAmt!='0'&&tatefeeAmt!='0.00'" class="item-row">
                 <label class="item-name">总滞纳金</label>
                 <span class="item-value">{{tatefeeAmt}}</span>
             </div>
@@ -165,13 +165,13 @@
                                 this.penaltyAndDerateAmt = this.totalAmt - this.tatefeeAmt;
                                 this.ntcStatus = ntcDetails.ntcStatus;
                                 if (this.ntcStatus == '01') {
-                                    this.cnNtcStatus = this.ntcStatus + "待缴款";
+                                    this.cnNtcStatus = "待缴款";
                                 } else if (self.ntcStatus == '02') {
-                                    this.cnNtcStatus = this.ntcStatus + "支付中";
+                                    this.cnNtcStatus = "支付中";
                                 } else if (self.ntcStatus == '03') {
-                                    this.cnNtcStatus = this.ntcStatus + "已缴款";
+                                    this.cnNtcStatus = "已缴款";
                                 } else {
-                                    this.cnNtcStatus = this.ntcStatus + "已废止";
+                                    this.cnNtcStatus = "已废止";
                                 }
                             } else if (res.resultCode) {
                                 this.resultCode = res.resultCode;

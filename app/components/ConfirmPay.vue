@@ -17,13 +17,13 @@
         <label class="item-name">通知书状态</label>
         <span class="item-value">{{cnNtcStatus}}</span>
       </div>
-      <div class="item-row">
+      <div v-if="tatefeeAmt&&tatefeeAmt!='0'&&tatefeeAmt!='0.00'" class="item-row">
         <label class="item-name">总滞纳金</label>
         <span class="item-value">{{tatefeeAmt}}</span>
       </div>
       <div class="item-row">
         <label class="item-name">标准金额</label>
-        <span class="item-value">{{penaltyAndDerateAmt}}</span>
+        <span class="item-value" >{{penaltyAndDerateAmt}}</span>
       </div>
       <div class="item-row">
         <label class="item-name">应缴总金额</label>
@@ -87,19 +87,19 @@ export default {
     this.penaltyAndDerateAmt = this.totalAmt-this.tatefeeAmt;
     if(this.ntcStatus){
       if(this.ntcStatus=='01'){
-        this.cnNtcStatus=this.ntcStatus+"待缴款";
+        this.cnNtcStatus="待缴款";
         this.show=true;
         this.cantClick = false;
       } else if(this.ntcStatus=='02'){
-        this.cnNtcStatus=this.ntcStatus+"支付中";
+        this.cnNtcStatus="支付中";
         this.cantClick = true;
         this.show=false;
       }else if(this.ntcStatus=='03'){
-        this.cnNtcStatus=this.ntcStatus+"已缴款";
+        this.cnNtcStatus="已缴款";
         this.cantClick = true;
         this.show=false;
       }else{
-        this.cnNtcStatus=this.ntcStatus+"已废止";
+        this.cnNtcStatus="已废止";
         this.cantClick = true;
         this.show=false;
       }
