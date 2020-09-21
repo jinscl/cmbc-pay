@@ -42,8 +42,8 @@ const COMMON_API = {
     // 请求路径拼接，为了避免被扫描出路径不安全
     forwardUrl:{
         protocol:'http://',
-        ip:'127.0.0.1:8383',
-        domain:'',
+        ip:'ydckgj-xs-dev.bcs.cmburl',
+        domain:'.cn',
     }
 }
 export default COMMON_API;
