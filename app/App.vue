@@ -65,7 +65,7 @@ export default {
       if (this.$route.path.indexOf("result") != -1) {
         this.$router.push({name: 'result', params: this.$route.params});
       } else {
-        this.$router.push("/search");
+        this.login();
       }
     }else {
       /**
