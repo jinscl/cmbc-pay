@@ -84,7 +84,7 @@ export default {
     this.tatefeeAmt = ntcDetails.tatefeeAmt;
     this.totalAmt = ntcDetails.totalAmt;
     this.ntcStatus = ntcDetails.ntcStatus;
-    this.penaltyAndDerateAmt = this.totalAmt-this.tatefeeAmt;
+    this.penaltyAndDerateAmt = commonUtil.accSub(this.totalAmt,this.tatefeeAmt);
     if(this.ntcStatus){
       if(this.ntcStatus=='01'){
         this.cnNtcStatus="待缴款";
@@ -121,7 +121,7 @@ export default {
       ntcStatus: "",//通知书状态
       bankPayResJson:"",//提交一网通支付的数据
       bankPayRes:"",//从后台获取一网通支付的数据
-      penaltyAndDerateAmt: "",//加罚+减免
+      penaltyAndDerateAmt: "",//应缴总金额-总滞纳金
       cnNtcStatus:"",//中文状态
       ntcId:""//通知书单号
     };

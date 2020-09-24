@@ -162,7 +162,7 @@
                                 this.payer = ntcDetails.payer;
                                 this.tatefeeAmt = ntcDetails.tatefeeAmt;
                                 this.totalAmt = ntcDetails.totalAmt;
-                                this.penaltyAndDerateAmt = this.totalAmt - this.tatefeeAmt;
+                                this.penaltyAndDerateAmt = commonUtil.accSub(this.totalAmt,this.tatefeeAmt);
                                 this.ntcStatus = ntcDetails.ntcStatus;
                                 if (this.ntcStatus == '01') {
                                     this.cnNtcStatus = "待缴款";
