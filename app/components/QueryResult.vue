@@ -47,7 +47,7 @@
                 </el-row>
             </div>
             <div v-if="!resultCode&&errorMsg" style="width: 200px;position:fixed;left: 100px;top: 120px">
-                    <div style="color: red">错误信息:</div>
+                    <div style="color: red">提示信息:</div>
                     <span class="item-error">{{errorMsg}}</span>
             </div>
             <!-- 退出确认弹窗 -->
