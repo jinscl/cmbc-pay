@@ -21,7 +21,7 @@ const COMMON_API = {
     },
     // 获取库中区划信息
     getFinanceCode:{
-        method:'get',
+        method:'post',
         url:'/CmbHttpController/CMB/getFinanceCode',
     },
     // 返回商户使用，查询订单信息
