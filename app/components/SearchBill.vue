@@ -110,12 +110,12 @@ export default {
       let self = this;
       cmblapi.scanBarcode({
         success:function(res){
-          let info = JSON.parse(res.result);
-          self.ntcId = info.ntcId;
-          self.areaCode = info.areaCode;
+          //self.$alert("扫描通知单！信息为："+JSON.stringify(res));
+          let info = res.result;
+          self.ntcId = info;
         },
         fail:function(res){
-          self.$alert("扫描通知单信息失败！信息为："+res);
+          self.$alert("扫描通知单信息失败！信息为："+JSON.stringify(res));
         }
       })
 
